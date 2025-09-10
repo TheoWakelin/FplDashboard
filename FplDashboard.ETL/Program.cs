@@ -2,6 +2,7 @@ using FplDashboard.DataModel;
 using FplDashboard.ETL;
 using FplDashboard.ETL.Services;
 using Microsoft.EntityFrameworkCore;
+using FplSyncRunner = FplDashboard.ETL.Services.FplSyncRunner;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -12,11 +13,11 @@ builder.Services
     .AddHttpClient()
     .AddScoped<TeamSyncService>()
     .AddScoped<GameWeekSyncService>()
-    .AddScoped<PlayerSyncService>()
-    .AddScoped<TeamGameWeekSyncService>()
-    .AddScoped<PlayerGameWeekSyncService>()
-    .AddScoped<PlayerNewsSyncService>()
-    .AddHostedService<FplSyncService>();
+    .AddScoped<FplSyncRunner>()
+    .AddScoped<FplSyncRunnerTestsTeamGameWeekSyncService>()
+    .AddScoped<FplSyncRunnerTestsPlayerGameWeekSyncService>()
+    .AddScoped<FplSyncRunnerTestsPlayerNewsSyncService>()
+    .AddHostedService<FplSyncHost>();
 
 var host = builder.Build();
 host.Run();

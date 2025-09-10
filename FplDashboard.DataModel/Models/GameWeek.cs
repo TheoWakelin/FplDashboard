@@ -11,13 +11,13 @@ public class GameWeek
 
     public int YearSeasonStarted { get; init; }
 
-    public DateTime DeadlineTime { get; init; }
+    public DateTime DeadlineTime { get; set; }
     
-    public GameWeekStatus Status { get; init; }
+    public GameWeekStatus Status { get; set; }
 
-    public int? AverageEntryScore { get; init; }
+    public int? AverageEntryScore { get; set; }
 
-    public int? HighestScore { get; init; }
+    public int? HighestScore { get; set; }
     
 
     public List<PlayerGameWeekData> PlayerGameWeekData { get; init; } = [];

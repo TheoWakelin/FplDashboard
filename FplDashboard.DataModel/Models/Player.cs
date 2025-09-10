@@ -12,48 +12,48 @@ public class Player
     [MaxLength(30)]
     public string? WebName { get; init; }
 
-    public int TeamId { get; init; }
+    public int TeamId { get; set; }
     
-    public Team? Team { get; init; }
-
-    public string Status { get; init; } = string.Empty;
+    public Team? Team { get; set; }
     
-    public double NowCost { get; init; }
+    public Position Position { get; set; }
 
-    public Position Position { get; init; }
-
-    public List<PlayerNews> News { get; init; } = [];
+    public string Status { get; set; } = string.Empty;
     
-    public List<PlayerGameWeekData> PlayerGameWeekData { get; init; } = [];
+    public double NowCost { get; set; }
+
+    public List<PlayerNews> News { get; set; } = [];
+    
+    public List<PlayerGameWeekData> PlayerGameWeekData { get; set; } = [];
 
     // Statistics
-    public int Bonus { get; init; }
+    public int Bonus { get; set; }
     
-    public double PointsPerGame { get; init; }
+    public double PointsPerGame { get; set; }
     
-    public int TotalPoints { get; init; }
+    public int TotalPoints { get; set; }
     
-    public int Minutes { get; init; }
+    public int Minutes { get; set; }
 
-    public int GoalsScored { get; init; }
+    public int GoalsScored { get; set; }
 
-    public int Assists { get; init; }
+    public int Assists { get; set; }
 
-    public int CleanSheets { get; init; }
+    public int CleanSheets { get; set; }
 
-    public int GoalsConceded { get; init; }
+    public int GoalsConceded { get; set; }
 
-    public int OwnGoals { get; init; }
+    public int OwnGoals { get; set; }
 
-    public int PenaltiesSaved { get; init; }
+    public int PenaltiesSaved { get; set; }
 
-    public int PenaltiesMissed { get; init; }
+    public int PenaltiesMissed { get; set; }
 
-    public int YellowCards { get; init; }
+    public int YellowCards { get; set; }
 
-    public int RedCards { get; init; }
+    public int RedCards { get; set; }
 
-    public int Saves { get; init; }
+    public int Saves { get; set; }
 }
 
 public enum Position

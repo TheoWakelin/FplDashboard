@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FplDashboard.ETL.Services;
 
-public class PlayerNewsSyncService(FplDashboardDbContext database)
+public class FplSyncRunnerTestsPlayerNewsSyncService(FplDashboardDbContext database)
 {
     public async Task SyncAsync(List<PlayerNews> playerNewsList, CancellationToken cancellationToken)
     {
