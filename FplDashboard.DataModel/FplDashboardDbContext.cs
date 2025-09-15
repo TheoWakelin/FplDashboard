@@ -11,6 +11,7 @@ public class FplDashboardDbContext(DbContextOptions<FplDashboardDbContext> optio
     public DbSet<PlayerGameWeekData> PlayerGameWeekData { get; set; }
     public DbSet<TeamGameWeekData> TeamGameWeekData { get; set; }
     public DbSet<PlayerNews> PlayerNews { get; set; }
+    public DbSet<Fixture> Fixtures { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -55,6 +56,21 @@ public class FplDashboardDbContext(DbContextOptions<FplDashboardDbContext> optio
             .HasOne(pn => pn.Player)
             .WithMany(p => p.News)
             .HasForeignKey(pn => pn.PlayerId);
+
+        modelBuilder.Entity<Fixture>()
+            .HasOne(f => f.GameWeek)
+            .WithMany(gw => gw.Fixtures)
+            .HasForeignKey(f => f.EventId);
+        modelBuilder.Entity<Fixture>()
+            .HasOne(f => f.TeamA)
+            .WithMany()
+            .HasForeignKey(f => f.TeamAId)
+            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Fixture>()
+            .HasOne(f => f.TeamH)
+            .WithMany()
+            .HasForeignKey(f => f.TeamHId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Enum conversions
         modelBuilder.Entity<Player>()

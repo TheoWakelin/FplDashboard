@@ -15,7 +15,10 @@ public class FplDashboardDbContextFactory : IDesignTimeDbContextFactory<FplDashb
             .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<FplDashboardDbContext>();
-        optionsBuilder.UseSqlServer(configuration.GetConnectionString("FplDashboard"));
+        optionsBuilder.UseSqlServer(
+            configuration.GetConnectionString("FplDashboard"),
+            b => b.MigrationsAssembly("FplDashboard.Migrations")
+        );
 
         return new FplDashboardDbContext(optionsBuilder.Options);
     }

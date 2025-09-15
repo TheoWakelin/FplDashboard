@@ -4,9 +4,7 @@ using FplDashboard.ETL.Services;
 
 namespace FplDashboard.ETL;
 
-public class FplSyncHost(
-    IFplApiClient apiClient,
-    IServiceScopeFactory scopeFactory)
+public class FplSyncHost(IServiceScopeFactory scopeFactory)
     : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -17,11 +15,13 @@ public class FplSyncHost(
             var db = scope.ServiceProvider.GetRequiredService<FplDashboardDbContext>();
             var teamSync = scope.ServiceProvider.GetRequiredService<TeamSyncService>();
             var gameWeekSync = scope.ServiceProvider.GetRequiredService<GameWeekSyncService>();
-            var playerSync = scope.ServiceProvider.GetRequiredService<Services.FplSyncRunner>();
-            var teamGameWeekSync = scope.ServiceProvider.GetRequiredService<FplSyncRunnerTestsTeamGameWeekSyncService>();
-            var playerGameWeekSync = scope.ServiceProvider.GetRequiredService<FplSyncRunnerTestsPlayerGameWeekSyncService>();
-            var playerNewsSync = scope.ServiceProvider.GetRequiredService<FplSyncRunnerTestsPlayerNewsSyncService>();
+            var playerSync = scope.ServiceProvider.GetRequiredService<Services.PlayerSyncService>();
+            var teamGameWeekSync = scope.ServiceProvider.GetRequiredService<TeamGameWeekSyncService>();
+            var playerGameWeekSync = scope.ServiceProvider.GetRequiredService<PlayerGameWeekSyncService>();
+            var playerNewsSync = scope.ServiceProvider.GetRequiredService<PlayerNewsSyncService>();
             var runnerLogger = scope.ServiceProvider.GetRequiredService<ILogger<FplSyncRunner>>();
+            var fixtureSyncService = scope.ServiceProvider.GetRequiredService<FixtureSyncService>();
+            var apiClient = scope.ServiceProvider.GetRequiredService<IFplApiClient>();
             var runner = new FplSyncRunner(
                 runnerLogger,
                 apiClient,
@@ -31,9 +31,12 @@ public class FplSyncHost(
                 playerSync,
                 teamGameWeekSync,
                 playerGameWeekSync,
-                playerNewsSync
+                playerNewsSync,
+                fixtureSyncService
             );
             await runner.RunSyncAsync(stoppingToken);
+            
+            await Task.Delay(TimeSpan.FromHours(12), stoppingToken);
         }
     }
 }

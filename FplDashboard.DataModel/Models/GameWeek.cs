@@ -23,6 +23,8 @@ public class GameWeek
     public List<PlayerGameWeekData> PlayerGameWeekData { get; init; } = [];
     
     public List<TeamGameWeekData> TeamGameWeekData { get; init; } = [];
+
+    public List<Fixture> Fixtures { get; init; } = [];
 }
 
 public enum GameWeekStatus

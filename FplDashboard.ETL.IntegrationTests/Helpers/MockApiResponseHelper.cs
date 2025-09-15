@@ -20,4 +20,9 @@ internal static class MockApiResponseHelper
 
         return JsonSerializer.Serialize(wrapper);
     }
+    
+    internal static string CreateFixtureApiResponse(List<Fixture> fixtures)
+    {
+        return JsonSerializer.Serialize(fixtures);
+    }
 }

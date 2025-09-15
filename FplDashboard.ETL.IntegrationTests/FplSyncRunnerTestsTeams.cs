@@ -7,7 +7,7 @@ using TeamFromApi = FplDashboard.ETL.Models.Team;
 
 namespace FplDashboard.ETL.IntegrationTests;
 
-public class TeamSyncServiceTests : FplSyncRunnerTestBase
+public class FplSyncRunnerTestsTeams : FplSyncRunnerTestBase
 {
     [Fact]
     public async Task SyncAsync_AddsNewTeams()

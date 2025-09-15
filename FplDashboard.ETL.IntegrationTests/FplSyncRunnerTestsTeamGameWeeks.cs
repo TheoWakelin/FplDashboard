@@ -36,13 +36,13 @@ public class FplSyncRunnerTestsTeamGameWeeks : FplSyncRunnerTestBase
         await Database.Teams.AddAsync(TeamData.CrystalPalace);
         await Database.GameWeeks.AddAsync(EventData.CurrentGameWeek);
         await Database.TeamGameWeekData.AddAsync(new TeamGameWeekData {
-            TeamId = 2,
+            TeamId = TeamData.CrystalPalace.Id,
             GameWeekId = EventData.CurrentGameWeek.Id,
             Points = 13
         });
         await Database.SaveChangesAsync();
         var apiResponse = MockApiResponseHelper.CreateApiResponse(
-            teams: [new TeamFromEtl { Id = 2, Name = "Crystal Palace", ShortName = "CRY", Points = 17 }]
+            teams: [new TeamFromEtl { Id = TeamData.CrystalPalaceFromEtl.Id, Name = "Crystal Palace", ShortName = "CRY", Points = 17 }]
         );
         ApiClient.Setup(x => x.GetMainFplData(It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
     
@@ -50,7 +50,7 @@ public class FplSyncRunnerTestsTeamGameWeeks : FplSyncRunnerTestBase
         await Sut.RunSyncAsync(CancellationToken.None);
     
         // Assert
-        var dbTeamGameWeekData = await Database.TeamGameWeekData.FirstOrDefaultAsync();
+        var dbTeamGameWeekData = await Database.TeamGameWeekData.FirstOrDefaultAsync(t => t.TeamId == TeamData.CrystalPalaceFromEtl.Id);
         Assert.NotNull(dbTeamGameWeekData);
         Assert.Equal(2, dbTeamGameWeekData.TeamId);
         Assert.Equal(17, dbTeamGameWeekData.Points);

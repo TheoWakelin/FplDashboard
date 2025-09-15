@@ -1,4 +1,3 @@
-using FplDashboard.DataModel.Models;
 using FplDashboard.ETL.IntegrationTests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using FplDashboard.ETL.IntegrationTests.Helpers;

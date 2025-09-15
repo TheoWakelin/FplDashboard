@@ -29,10 +29,11 @@ public abstract class FplSyncRunnerTestBase : IDisposable
             Database,
             new TeamSyncService(Database),
             new GameWeekSyncService(Database),
-            new Services.FplSyncRunner(Database),
-            new FplSyncRunnerTestsTeamGameWeekSyncService(Database),
-            new FplSyncRunnerTestsPlayerGameWeekSyncService(Database),
-            new FplSyncRunnerTestsPlayerNewsSyncService(Database)
+            new Services.PlayerSyncService(Database),
+            new TeamGameWeekSyncService(Database),
+            new PlayerGameWeekSyncService(Database),
+            new PlayerNewsSyncService(Database),
+            new FixtureSyncService(Database)
         );
     }
 

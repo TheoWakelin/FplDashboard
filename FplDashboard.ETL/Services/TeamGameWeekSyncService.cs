@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FplDashboard.ETL.Services;
 
-public class FplSyncRunnerTestsTeamGameWeekSyncService(FplDashboardDbContext database)
+public class TeamGameWeekSyncService(FplDashboardDbContext database)
 {
     public async Task SyncAsync(List<TeamGameWeekData> teamGameWeekDataList, int currentGameWeekId, CancellationToken cancellationToken)
     {
