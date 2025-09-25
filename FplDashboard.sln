@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FplDashboard.Migrations", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FplDashboard.ETL.IntegrationTests", "FplDashboard.ETL.IntegrationTests\FplDashboard.ETL.IntegrationTests.csproj", "{88C146C6-3796-44C6-ABAB-5BB72E4C020D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FplDashboard.API", "FplDashboard.API\FplDashboard.API.csproj", "{184C2B23-530B-45CB-9B2B-D3930C8AF373}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FplDashboard.API.Tests", "FplDashboard.API.Tests\FplDashboard.API.Tests.csproj", "{CC8FB584-2611-4DD5-866B-845AB2CD673B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{88C146C6-3796-44C6-ABAB-5BB72E4C020D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88C146C6-3796-44C6-ABAB-5BB72E4C020D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88C146C6-3796-44C6-ABAB-5BB72E4C020D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{184C2B23-530B-45CB-9B2B-D3930C8AF373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{184C2B23-530B-45CB-9B2B-D3930C8AF373}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{184C2B23-530B-45CB-9B2B-D3930C8AF373}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{184C2B23-530B-45CB-9B2B-D3930C8AF373}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC8FB584-2611-4DD5-866B-845AB2CD673B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC8FB584-2611-4DD5-866B-845AB2CD673B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC8FB584-2611-4DD5-866B-845AB2CD673B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC8FB584-2611-4DD5-866B-845AB2CD673B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

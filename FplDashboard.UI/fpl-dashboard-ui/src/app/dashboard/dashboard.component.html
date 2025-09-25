@@ -1,0 +1,35 @@
+<div class="dashboard-container">
+  <h1>FPL Dashboard</h1>
+  
+  @if (isLoading) {
+      <div class="loading-container">
+        <mat-spinner></mat-spinner>
+        <p>Loading dashboard data...</p>
+      </div>
+    }
+
+    <div class="dashboard-subheader">
+      <span class="subheader-icon">⚡</span>
+      <span class="subheader-text">Your one-stop shop for FPL news & fixtures</span>
+    </div>
+  
+  @if (error) {
+    <div class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+  }
+  
+  @if (dashboardData && !isLoading) {
+    <div class="dashboard-content">
+      <div class="dashboard-grid">
+        <div class="player-news-section">
+          <app-player-news [playerNews]="dashboardData.playerNews || []"></app-player-news>
+        </div>
+      </div>
+      <div class="team-fixtures-section">
+        <app-team-fixtures [teamFixtures]="dashboardData.teamFixtures || []"></app-team-fixtures>
+      </div>
+    </div>
+  }
+</div>

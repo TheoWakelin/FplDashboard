@@ -1,0 +1,61 @@
+<mat-card class="player-news-card">
+  <mat-card-header>
+      <mat-card-title>
+        <span class="subheader">Player News</span>
+      </mat-card-title>
+  </mat-card-header>
+  
+  <mat-card-content>
+    @if (playerNews.length === 0) {
+      <div class="no-data">
+        <mat-icon>info</mat-icon>
+        <p>No player news available</p>
+      </div>
+    }
+    
+    @if (playerNews.length > 0) {
+      <table mat-table [dataSource]="playerNews" class="player-news-table">
+        
+        <ng-container matColumnDef="playerImage">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let playerNewsItem" class="player-image-cell">
+            <span>
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.754 14a2.249 2.249 0 0 1 2.25 2.249v.918a2.75 2.75 0 0 1-.513 1.599C17.945 20.929 15.42 22 12 22c-3.422 0-5.945-1.072-7.487-3.237a2.75 2.75 0 0 1-.51-1.595v-.92a2.249 2.249 0 0 1 2.249-2.25h11.501ZM12 2.004a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z" fill="#212121"/></svg>
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="playerName">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let playerNewsItem" class="player-name-cell">
+            {{ playerNewsItem.PlayerName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="teamName">
+          <th mat-header-cell *matHeaderCellDef>Team</th>
+          <td mat-cell *matCellDef="let playerNewsItem" class="team-name-cell">
+            {{ playerNewsItem.TeamName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="news">
+          <th mat-header-cell *matHeaderCellDef>News</th>
+          <td mat-cell *matCellDef="let playerNewsItem" class="news-cell">
+            {{ playerNewsItem.News }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="newsAdded">
+          <th mat-header-cell *matHeaderCellDef>Date Added</th>
+          <td mat-cell *matCellDef="let playerNewsItem" class="news-added-cell">
+            {{ playerNewsItem.NewsAdded | humanizeDate }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    }
+  </mat-card-content>
+</mat-card>

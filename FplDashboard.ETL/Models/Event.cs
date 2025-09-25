@@ -1,5 +1,6 @@
 ﻿using FplDashboard.DataModel.Models;
 using System.Text.Json.Serialization;
+using FplDashboard.ETL.Helpers;
 
 namespace FplDashboard.ETL.Models
 {
@@ -34,10 +35,11 @@ namespace FplDashboard.ETL.Models
                 Status = gameWeek.IsCurrent ? GameWeekStatus.Current :
                          gameWeek.IsNext ? GameWeekStatus.Next :
                          gameWeek.IsPrevious ? GameWeekStatus.Previous :
+                         gameWeek.AverageEntryScore != 0 ? GameWeekStatus.Finished :
                          GameWeekStatus.Future,
                 AverageEntryScore = gameWeek.AverageEntryScore,
                 HighestScore = gameWeek.HighestScore,
-                YearSeasonStarted = gameWeek.DeadlineTime.Month >= 8 ? gameWeek.DeadlineTime.Year : gameWeek.DeadlineTime.Year - 1
+                YearSeasonStarted = YearHelpers.GetYearCurrentSeasonStarted()
             };
     }
 }

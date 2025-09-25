@@ -32,5 +32,6 @@ public enum GameWeekStatus
     Previous,
     Current,
     Next,
-    Future
+    Future,
+    Finished
 }
