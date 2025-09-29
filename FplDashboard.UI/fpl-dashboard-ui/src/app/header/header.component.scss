@@ -1,0 +1,21 @@
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem 2rem;
+}
+.breadcrumbs {
+  display: flex;
+  gap: 2rem;
+}
+.breadcrumbs a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+.breadcrumbs a.active {
+  border-bottom: 2px solid #1976d2;
+  color: #1976d2;
+}

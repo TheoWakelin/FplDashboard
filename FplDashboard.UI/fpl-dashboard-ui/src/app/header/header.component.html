@@ -1,0 +1,7 @@
+<header class="site-header">
+  <nav class="breadcrumbs">
+    <a [routerLink]="['/']" [class.active]="router.url === '/'">Home</a>
+    <a [routerLink]="['/players']" [class.active]="router.url.startsWith('/players')">Players</a>
+    <a [routerLink]="['/teams']" [class.active]="router.url.startsWith('/teams')">Teams</a>
+  </nav>
+</header>

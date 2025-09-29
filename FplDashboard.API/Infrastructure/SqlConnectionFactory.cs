@@ -1,7 +1,7 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace FplDashboard.API.Factories;
+namespace FplDashboard.API.Infrastructure;
 
 public class SqlConnectionFactory(IConfiguration configuration) : IDbConnectionFactory
 {

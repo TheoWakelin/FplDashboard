@@ -1,5 +1,5 @@
 using System.Data.Common;
-using FplDashboard.API.Queries;
+using FplDashboard.API.Features.Dashboard;
 using FplDashboard.DataModel;
 using FplDashboard.DataModel.Models;
 using Microsoft.Data.Sqlite;
@@ -55,7 +55,7 @@ public class DashboardQueriesTests : IDisposable
         await _dbContext.SaveChangesAsync();
 
         // Act
-        var result = await _dashboardQueries.GetDashboardDataAsync();
+        var result = await _dashboardQueries.GetDashboardDataAsync(CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);

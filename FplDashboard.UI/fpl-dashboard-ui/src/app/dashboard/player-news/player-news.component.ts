@@ -4,7 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { PlayerNews } from '../dashboard-data.model';
-import { HumanizeDatePipe } from '../humanize-date.pipe';
+import { HumanizeDatePipe } from '../../shared/pipes/humanize-date.pipe';
 
 @Component({
   selector: 'app-player-news',

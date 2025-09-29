@@ -1,5 +1,5 @@
 using System.Data;
-using FplDashboard.API.Factories;
+using FplDashboard.API.Infrastructure;
 using Microsoft.Data.Sqlite;
 
 namespace FplDashboard.API.Tests;

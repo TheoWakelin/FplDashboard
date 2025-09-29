@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardApiService } from './dashboard-api.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 
 import { DashboardData } from './dashboard-data.model';
 import { PlayerNewsComponent } from './player-news/player-news.component';
 import { TeamFixturesComponent } from './team-fixtures/team-fixtures.component';
+import { ApiDataService } from '../api-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
 
-  constructor(private dashboardApi: DashboardApiService) { }
+  constructor(private dashboardApi: ApiDataService) { }
 
   ngOnInit(): void {
     this.loadDashboardData();

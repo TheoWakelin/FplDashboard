@@ -1,5 +1,6 @@
-using FplDashboard.API.Factories;
-using FplDashboard.API.Queries;
+using FplDashboard.API.Features.Dashboard;
+using FplDashboard.API.Features.Teams;
+using FplDashboard.API.Infrastructure;
 using FplDashboard.DataModel;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<FplDashboardDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
 builder.Services.AddScoped<DashboardQueries>();
+builder.Services.AddScoped<TeamsQueries>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularDev",

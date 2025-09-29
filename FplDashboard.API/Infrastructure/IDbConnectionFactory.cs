@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace FplDashboard.API.Factories;
+namespace FplDashboard.API.Infrastructure;
 
 public interface IDbConnectionFactory
 {

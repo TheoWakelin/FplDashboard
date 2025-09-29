@@ -1,9 +1,9 @@
-namespace FplDashboard.API.Queries
+namespace FplDashboard.API.Features.Teams
 {
     public class TeamFixturesDto
     {
         public string TeamName { get; set; } = string.Empty;
-        public List<FixtureScoreDto> Fixtures { get; set; } = new();
+        public List<FixtureScoreDto> Fixtures { get; set; } = [];
 
         public int TotalAttackingStrength => Fixtures.Sum(f => f.AttackingStrength);
         public int TotalDefensiveStrength => Fixtures.Sum(f => f.DefensiveStrength);
