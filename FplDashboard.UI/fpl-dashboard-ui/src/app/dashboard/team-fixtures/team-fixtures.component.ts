@@ -15,7 +15,9 @@ import { TeamFixturesDto } from '../dashboard-data.model';
 export class TeamFixturesComponent {
   @Input() topTeamFixtures: TeamFixturesDto[] = [];
   @Input() bottomTeamFixtures: TeamFixturesDto[] = [];
+
   constructor(private router: Router) {}
+  
   goToTeams() {
     this.router.navigate(['/teams']);
   }

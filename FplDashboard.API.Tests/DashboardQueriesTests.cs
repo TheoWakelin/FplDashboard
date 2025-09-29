@@ -1,9 +1,11 @@
 using System.Data.Common;
 using FplDashboard.API.Features.Dashboard;
+using FplDashboard.API.Features.Shared;
 using FplDashboard.DataModel;
 using FplDashboard.DataModel.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace FplDashboard.API.Tests;
 
@@ -27,7 +29,7 @@ public class DashboardQueriesTests : IDisposable
 
         // Use the connection factory for DashboardQueries
         var connectionFactory = new TestSqliteConnectionFactory((SqliteConnection)_connection);
-        _dashboardQueries = new DashboardQueries(connectionFactory);
+        _dashboardQueries = new DashboardQueries(connectionFactory, new Mock<GeneralQueries>().Object);
     }
 
     public void Dispose()

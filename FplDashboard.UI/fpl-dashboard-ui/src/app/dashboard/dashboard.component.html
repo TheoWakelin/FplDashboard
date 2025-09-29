@@ -2,14 +2,11 @@
   <h1>FPL Dashboard</h1>
   
   @if (isLoading) {
-    <div class="loading-container">
-      <mat-spinner></mat-spinner>
-      <p>Loading dashboard data...</p>
-    </div>
+    <app-loading-spinner></app-loading-spinner>
   }
   @if (error && !isLoading) {
     <div class="error-container">
-      <mat-icon color="warn">error</mat-icon>
+  <span class="error-icon">&#9888;</span>
       <p>{{ error }}</p>
     </div>
   }

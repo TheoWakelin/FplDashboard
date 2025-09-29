@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 
 import { DashboardData } from './dashboard-data.model';
 import { PlayerNewsComponent } from './player-news/player-news.component';
@@ -11,7 +10,7 @@ import { ApiDataService } from '../api-data.service';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule, MatIconModule, PlayerNewsComponent, TeamFixturesComponent],
+  imports: [CommonModule, LoadingSpinnerComponent, PlayerNewsComponent, TeamFixturesComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })

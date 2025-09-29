@@ -1,0 +1,29 @@
+export interface PlayerPagedDto {
+  playerId: number;
+  playerName: string;
+  teamName: string;
+  position: string;
+  cost: number;
+  bonus: number;
+  totalPoints: number;
+  minutes: number;
+  goals: number;
+  assists: number;
+  cleanSheets: number;
+  pointsPerGame: number;
+  form: number;
+  expectedAssistsPer90: number;
+  expectedGoalInvolvementsPer90: number;
+  expectedGoalsPer90: number;
+  expectedGoalsConcededPer90: number;
+  defensiveContributionPer90: number;
+  savesPer90: number;
+  selectedByPercent: number;
+  valueSeason: number;
+  valueForm: number;
+  bps: number;
+  influence: number;
+  creativity: number;
+  threat: number;
+  ictIndex: number;
+}

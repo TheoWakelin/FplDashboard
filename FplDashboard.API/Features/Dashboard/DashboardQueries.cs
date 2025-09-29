@@ -1,9 +1,10 @@
 using Dapper;
 using FplDashboard.API.Infrastructure;
+using FplDashboard.API.Features.Shared;
 
 namespace FplDashboard.API.Features.Dashboard;
 
-public class DashboardQueries(IDbConnectionFactory connectionFactory)
+public class DashboardQueries(IDbConnectionFactory connectionFactory, GeneralQueries generalQueries)
 {
     public async Task<object> GetDashboardDataAsync(CancellationToken cancellationToken)
     {
@@ -22,14 +23,7 @@ public class DashboardQueries(IDbConnectionFactory connectionFactory)
             )
         );
 
-        // Query for the current gameweek id
-        var currentGameWeekId = await connection.QuerySingleAsync<int>(
-            new CommandDefinition(
-                @"SELECT Id FROM GameWeeks WHERE Status = 1 -- 1 = Current",
-                parameters: null,
-                cancellationToken: cancellationToken
-            )
-        );
+        var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
 
         var topBottomSql = await File.ReadAllTextAsync("Features/Dashboard/Sql/TopBottomTeamFixtures.sql", cancellationToken);
         var topBottomTeams = await connection.QueryAsync<TeamStrengthDto>(

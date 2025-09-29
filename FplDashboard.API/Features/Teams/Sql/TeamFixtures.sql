@@ -23,5 +23,4 @@ JOIN TeamGameWeekData oppd ON oppd.TeamId = opp.Id AND oppd.GameWeekId = @Curren
 WHERE f.EventId IN (
     SELECT TOP 5 Id FROM GameWeeks g WHERE g.Id > @CurrentGameWeekId ORDER BY GameWeekNumber ASC
 )
-ORDER BY t.Name, gw.GameWeekNumber
 

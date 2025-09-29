@@ -1,4 +1,6 @@
 using FplDashboard.API.Features.Dashboard;
+using FplDashboard.API.Features.Players;
+using FplDashboard.API.Features.Shared;
 using FplDashboard.API.Features.Teams;
 using FplDashboard.API.Infrastructure;
 using FplDashboard.DataModel;
@@ -12,6 +14,9 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
 builder.Services.AddScoped<DashboardQueries>();
 builder.Services.AddScoped<TeamsQueries>();
+builder.Services.AddScoped<PlayersQueries>();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<GeneralQueries>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularDev",

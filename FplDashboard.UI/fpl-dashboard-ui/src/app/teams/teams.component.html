@@ -1,74 +1,66 @@
-<mat-card class="team-fixtures-card">
-  <mat-card-header>
-    <mat-card-title>
-      <span class="subheader">Team Fixtures</span>
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+<div class="team-fixtures-card">
+  <div class="card-header">
+    <span class="subheader">Team Fixtures</span>
+  </div>
+  <div class="card-content">
     @if (isLoading) {
-      <div class="loading-state">
-        <mat-icon>hourglass_top</mat-icon>
-        <span>Loading team fixtures...</span>
-      </div>
+      <app-loading-spinner></app-loading-spinner>
     }
     @if (error) {
       <div class="error-state">
-        <mat-icon color="warn">error</mat-icon>
+        <span class="error-icon">&#9888;</span>
         <span>{{ error }}</span>
       </div>
     }
     @if (!isLoading && !error && teamFixtures.length === 0) {
       <div class="no-data">
-        <mat-icon>info</mat-icon>
+        <span class="info-icon">&#9432;</span>
         <p>No team fixtures available</p>
       </div>
     }
     @if (!isLoading && !error && teamFixtures.length > 0) {
-      <table mat-table [dataSource]="dataSource" class="team-fixtures-table">
-        <ng-container matColumnDef="teamName">
-          <th mat-header-cell *matHeaderCellDef>Team Name</th>
-          <td mat-cell *matCellDef="let team">{{ team.teamName }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="attackingScore">
-          <th mat-header-cell *matHeaderCellDef>Attacking Score</th>
-          <td mat-cell *matCellDef="let team">{{ team.totalAttackingStrength }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="defensiveScore">
-          <th mat-header-cell *matHeaderCellDef>Defensive Score</th>
-          <td mat-cell *matCellDef="let team">{{ team.totalDefensiveStrength }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="overallScore">
-          <th mat-header-cell *matHeaderCellDef>Overall Score</th>
-          <td mat-cell *matCellDef="let team">{{ team.cumulativeStrength }}</td>
-        </ng-container>
-
-        @for (gw of gameWeeks; track gw) {
-          <ng-container [matColumnDef]="'gw' + gw">
-            <th mat-header-cell *matHeaderCellDef>GW {{ gw }}</th>
-            <td mat-cell *matCellDef="let team">
-              @if (getFixtureForGameWeek(team, gw)) {
-                <div class="fixture-chip-wrapper">
-                  <div class="fixture-opponent-name">
-                    <strong>{{ getFixtureForGameWeek(team, gw)?.opponentName }}</strong>
-                  </div>
-                  <span class="chip" [ngClass]="getFixtureForGameWeek(team, gw) ? getOpponentDifficultyClass(getFixtureForGameWeek(team, gw)!) : 'difficulty-medium'">
-                    Attack: {{ getFixtureForGameWeek(team, gw)?.attackingStrength }}
-                  </span>
-                  <span class="chip" [ngClass]="getFixtureForGameWeek(team, gw) ? getOpponentDifficultyClass(getFixtureForGameWeek(team, gw)!) : 'difficulty-medium'">
-                    Defence: {{ getFixtureForGameWeek(team, gw)?.defensiveStrength }}
-                  </span>
-                </div>
+      <div class="table-wrapper">
+        <table class="team-fixtures-table">
+          <thead>
+            <tr>
+              <th>Team Name</th>
+              <th>Attacking Score</th>
+              <th>Defensive Score</th>
+              <th>Overall Score</th>
+              @for (gw of gameWeeks; track gw) {
+                <th>GW {{ gw }}</th>
               }
-            </td>
-          </ng-container>
-        }
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+            </tr>
+          </thead>
+          <tbody>
+            @for (team of teamFixtures; track team.teamName) {
+              <tr>
+                <td>{{ team.teamName }}</td>
+                <td>{{ team.totalAttackingStrength }}</td>
+                <td>{{ team.totalDefensiveStrength }}</td>
+                <td>{{ team.cumulativeStrength }}</td>
+                @for (gw of gameWeeks; track gw) {
+                  <td>
+                    @if (getFixtureForGameWeek(team, gw)) {
+                      <div class="fixture-chip-wrapper">
+                        <div class="fixture-opponent-name">
+                          <strong>{{ getFixtureForGameWeek(team, gw)?.opponentName }}</strong>
+                        </div>
+                        <span class="chip {{ getOpponentDifficultyClass(getFixtureForGameWeek(team, gw)!) }}">
+                          Attack: {{ getFixtureForGameWeek(team, gw)?.attackingStrength }}
+                        </span>
+                        <span class="chip {{ getOpponentDifficultyClass(getFixtureForGameWeek(team, gw)!) }}">
+                          Defence: {{ getFixtureForGameWeek(team, gw)?.defensiveStrength }}
+                        </span>
+                      </div>
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     }
-  </mat-card-content>
-</mat-card>
+  </div>
+</div>

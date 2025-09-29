@@ -1,7 +1,77 @@
 <div class="players-page">
-  <h2>Players</h2>
-  <!-- Filtering and sorting UI will go here -->
-  <div class="players-list">
-    <!-- List of players will be rendered here -->
+  <div class="page-header">
+    <h1 class="page-title">Players</h1>
+    <span class="subheader">All FPL Players</span>
   </div>
-</div>
+  <div class="players-table-wrapper">
+  <table class="players-table">
+      <thead>
+        <tr>
+          <th class="sticky-col sticky-header">Player Name</th>
+          <th class="sticky-col sticky-header second">Team Name</th>
+          <th>Position</th>
+          <th>Cost</th>
+          <th>Bonus</th>
+          <th>Total Points</th>
+          <th>Minutes</th>
+          <th>Goals</th>
+          <th>Assists</th>
+          <th>Clean Sheets</th>
+          <th>Points/Game</th>
+          <th>Form</th>
+          <th>xA/90</th>
+          <th>xGI/90</th>
+          <th>xG/90</th>
+          <th>xGC/90</th>
+          <th>Def. Contrib/90</th>
+          <th>Saves/90</th>
+          <th>Selected %</th>
+          <th>Value Season</th>
+          <th>Value Form</th>
+          <th>BPS</th>
+          <th>Influence</th>
+          <th>Creativity</th>
+          <th>Threat</th>
+          <th>ICT Index</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let player of players">
+          <td class="sticky-col">{{ player.playerName }}</td>
+          <td class="sticky-col second">{{ player.teamName }}</td>
+          <td>{{ player.position }}</td>
+          <td>{{ player.cost | cost }}</td>
+          <td>{{ player.bonus }}</td>
+          <td>{{ player.totalPoints }}</td>
+          <td>{{ player.minutes }}</td>
+          <td>{{ player.goals }}</td>
+          <td>{{ player.assists }}</td>
+          <td>{{ player.cleanSheets }}</td>
+          <td>{{ player.pointsPerGame }}</td>
+          <td>{{ player.form }}</td>
+          <td>{{ player.expectedAssistsPer90 }}</td>
+          <td>{{ player.expectedGoalInvolvementsPer90 }}</td>
+          <td>{{ player.expectedGoalsPer90 }}</td>
+          <td>{{ player.expectedGoalsConcededPer90 }}</td>
+          <td>{{ player.defensiveContributionPer90 }}</td>
+          <td>{{ player.savesPer90 }}</td>
+          <td>{{ player.selectedByPercent }}</td>
+          <td>{{ player.valueSeason }}</td>
+          <td>{{ player.valueForm }}</td>
+          <td>{{ player.bps }}</td>
+          <td>{{ player.influence }}</td>
+          <td>{{ player.creativity }}</td>
+          <td>{{ player.threat }}</td>
+          <td>{{ player.ictIndex }}</td>
+        </tr>
+      </tbody>
+    </table>
+    @if (loading) {
+      <app-loading-spinner></app-loading-spinner>
+    }
+    <div class="pager">
+      <button (click)="page = page - 1; fetchPlayers();" [disabled]="page === 1 || loading">Previous</button>
+      <span>Page {{ page }}</span>
+      <button (click)="page = page + 1; fetchPlayers();" [disabled]="loading">Next</button>
+    </div>
+  </div>

@@ -1,20 +1,15 @@
 using Dapper;
 using FplDashboard.API.Infrastructure;
+using FplDashboard.API.Features.Shared;
 
 namespace FplDashboard.API.Features.Teams
 {
-    public class TeamsQueries(IDbConnectionFactory connectionFactory)
+    public class TeamsQueries(IDbConnectionFactory connectionFactory, GeneralQueries generalQueries)
     {
         public async Task<List<TeamFixturesDto>> GetTeamFixturesAsync(CancellationToken cancellationToken)
         {
             using var connection = connectionFactory.CreateConnection();
-            var currentGameWeekId = await connection.QuerySingleAsync<int>(
-                new CommandDefinition(
-                    "SELECT Id FROM GameWeeks WHERE Status = 1 -- 1 = Current",
-                    parameters: null,
-                    cancellationToken: cancellationToken
-                )
-            );
+            var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
 
             var teamFixturesSql = await File.ReadAllTextAsync("Features/Teams/Sql/TeamFixtures.sql", cancellationToken);
             var fixturesRaw = await connection.QueryAsync<FixtureScoreDto>(

@@ -1,8 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 import { TeamFixturesDto, FixtureScoreDto } from './team-fixtures.model';
 import { ApiDataService } from '../api-data.service';
 import { OnInit } from '@angular/core';
@@ -10,7 +8,7 @@ import { OnInit } from '@angular/core';
 @Component({
   selector: 'app-teams',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatTableModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.scss']
 })
@@ -18,11 +16,7 @@ export class TeamsComponent implements OnInit, OnChanges {
   public isLoading = true;
   public error: string | null = null;
   public teamFixtures: TeamFixturesDto[] = [];
-  private _teamFixtures: TeamFixturesDto[] = [];
-  public dataSource = new MatTableDataSource<TeamFixturesDto>([]);
   public gameWeeks: number[] = [];
-  public displayedColumns: string[] = ['teamName', 'attackingScore', 'defensiveScore', 'overallScore'];
-  public fixtureColumns: string[] = [];
 
   constructor(private api: ApiDataService) {}
 
@@ -32,7 +26,6 @@ export class TeamsComponent implements OnInit, OnChanges {
     this.api.getTeamFixtures().subscribe({
       next: (data) => {
         this.teamFixtures = data;
-        this.dataSource.data = data;
         this.updateGameWeeks();
         this.isLoading = false;
       },
@@ -57,12 +50,6 @@ export class TeamsComponent implements OnInit, OnChanges {
       team.fixtures.forEach(fix => gwSet.add(fix.gameWeekNumber));
     });
     this.gameWeeks = Array.from(gwSet).sort((a, b) => a - b);
-    // For each gameweek, add a single column
-    this.fixtureColumns = [];
-    this.gameWeeks.forEach(gw => {
-      this.fixtureColumns.push('gw' + gw);
-    });
-    this.displayedColumns = ['teamName', 'attackingScore', 'defensiveScore', 'overallScore', ...this.fixtureColumns];
   }
 
   getOpponentDifficultyClass(fixture: FixtureScoreDto): string {
