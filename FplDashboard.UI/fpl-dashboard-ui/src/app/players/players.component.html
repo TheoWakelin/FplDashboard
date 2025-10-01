@@ -3,6 +3,17 @@
     <h1 class="page-title">Players</h1>
     <span class="subheader">All FPL Players</span>
   </div>
+  @if (teamsLoaded) {
+    <div class="team-filter-wrapper">
+      <app-multi-select
+        [items]="teams"
+        [selectedIds]="selectedTeamIds"
+        [placeholder]="'All Teams'"
+        [maxLabelLength]="32"
+        (selectedIdsChange)="onTeamsSelected($event)">
+      </app-multi-select>
+    </div>
+  }
   <div class="players-table-wrapper">
     <app-orderable-table
       [headers]="tableHeaders"

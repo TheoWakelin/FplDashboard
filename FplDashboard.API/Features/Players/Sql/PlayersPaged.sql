@@ -30,7 +30,7 @@ FROM Players p
 JOIN Teams t ON p.TeamId = t.Id
 JOIN PlayerGameWeekData pgwd ON pgwd.PlayerId = p.Id AND pgwd.GameWeekId = @CurrentGameWeekId
 WHERE p.Status = 'a'
-  AND (@TeamId IS NULL OR p.TeamId = @TeamId)
   AND (@Position IS NULL OR p.Position = @Position)
+    {TeamFilter}
 ORDER BY {OrderBy} {OrderDir}
 OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY

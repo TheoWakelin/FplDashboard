@@ -3,25 +3,51 @@ import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 import { CostPipe } from '../shared/pipes/cost.pipe';
 import { OrderableTableComponent, TableHeader } from '../shared/orderable-table/orderable-table.component';
+import { FormsModule } from '@angular/forms';
+import { MultiSelectComponent } from '../shared/multi-select/multi-select.component';
 
 import { ApiDataService } from '../api-data.service';
 import { PlayerPagedDto } from './player-paged.model';
+import { TeamListDto } from '../teams/team-list.model';
 
 @Component({
   selector: 'app-players',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, CostPipe, OrderableTableComponent],
+  imports: [CommonModule, LoadingSpinnerComponent, CostPipe, OrderableTableComponent, FormsModule, MultiSelectComponent],
   templateUrl: './players.component.html',
   styleUrls: ['./players.component.scss']
 })
 export class PlayersComponent {
+  onTeamsSelected(teamIds: number[]) {
+    this.selectedTeamIds = teamIds;
+    this.fetchPlayers();
+  }
+  getSelectedTeamNames(): string {
+    if (!this.selectedTeamIds.length) return 'All Teams';
+    return this.teams.filter(t => this.selectedTeamIds.includes(t.id)).map(t => t.name).join(', ');
+  }
+
+  toggleTeamSelection(teamId: number, checked: boolean) {
+    if (checked) {
+      if (!this.selectedTeamIds.includes(teamId)) {
+        this.selectedTeamIds = [...this.selectedTeamIds, teamId];
+      }
+    } else {
+      this.selectedTeamIds = this.selectedTeamIds.filter(id => id !== teamId);
+    }
+  }
   players: PlayerPagedDto[] = [];
-  loading = false;
+  loading = true;
   page = 1;
   pageSize = 20;
 
   orderBy: string = '';
   orderDir: '' | 'asc' | 'desc' = '';
+
+  teams: TeamListDto[] = [];
+  selectedTeamIds: number[] = [];
+  teamsLoaded = false;
+  teamSelectOpen = false;
 
   tableHeaders: TableHeader[] = [
     { key: 'PlayerName', label: 'Player Name', sticky: true, sortable: true },
@@ -55,12 +81,28 @@ export class PlayersComponent {
   constructor(private api: ApiDataService) {}
 
   ngOnInit() {
-    this.fetchPlayers();
+    this.api.getTeamsList().subscribe({
+      next: (teams) => {
+        this.teams = teams;
+        this.teamsLoaded = true;
+        this.fetchPlayers();
+      },
+      error: () => {
+        this.teamsLoaded = true;
+        this.fetchPlayers();
+      }
+    });
   }
 
   fetchPlayers() {
     this.loading = true;
-    this.api.getPagedPlayers(this.page, this.pageSize, this.orderBy, this.orderDir).subscribe({
+    this.api.getPagedPlayers(
+      this.page,
+      this.pageSize,
+      this.orderBy,
+      this.orderDir,
+      this.selectedTeamIds.length > 0 ? this.selectedTeamIds : undefined
+    ).subscribe({
       next: (data) => {
         this.players = data;
         this.loading = false;
@@ -69,6 +111,15 @@ export class PlayersComponent {
         this.loading = false;
       }
     });
+  }
+
+  openTeamSelect() {
+    this.teamSelectOpen = true;
+  }
+
+  closeTeamSelect() {
+    this.teamSelectOpen = false;
+    this.fetchPlayers();
   }
 
   setOrder(orderBy: string, orderDir: 'asc' | 'desc') {

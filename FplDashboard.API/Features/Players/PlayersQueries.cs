@@ -37,7 +37,7 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
     };
 
     public async Task<List<PlayerPagedDto>> GetPagedPlayersAsync(
-        int? teamId,
+        List<int>? teamIds,
         string? position,
         string? orderBy,
         string? orderDir,
@@ -51,9 +51,14 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
         // Sanitize orderBy
         var orderByColumn = AllowedOrderColumns.ContainsKey(orderBy ?? "") ? AllowedOrderColumns[orderBy!] : "p.TotalPoints";
         var orderDirection = (orderDir?.ToUpper() == "ASC") ? "ASC" : "DESC";
+        
+        // Dapper cannot handle a null check with an IN clause, so conditionally add the filter.
+        var teamsFilter = teamIds != null && teamIds.Count != 0 ? "AND p.TeamId IN @TeamIds" : "";
 
         // Replace placeholders in SQL
-        sql = sql.Replace("{OrderBy}", orderByColumn).Replace("{OrderDir}", orderDirection);
+        sql = sql.Replace("{OrderBy}", orderByColumn)
+            .Replace("{OrderDir}", orderDirection)
+            .Replace("{TeamFilter}", teamsFilter);
 
         var offset = (page - 1) * pageSize;
 
@@ -62,7 +67,7 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
                 sql,
                 parameters: new
                 {
-                    TeamId = teamId,
+                    TeamIds = teamIds,
                     Position = position,
                     Offset = offset,
                     PageSize = pageSize,
@@ -72,5 +77,14 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
             )
         );
         return players.ToList();
+    }
+
+    public async Task<List<TeamListDto>> GetAllTeamsAsync(CancellationToken cancellationToken)
+    {
+        const string sql = "SELECT Id, Name FROM Teams ORDER BY Name";
+        var teams = await connectionFactory.CreateConnection().QueryAsync<TeamListDto>(
+            new CommandDefinition(sql, cancellationToken: cancellationToken)
+        );
+        return teams.ToList();
     }
 }

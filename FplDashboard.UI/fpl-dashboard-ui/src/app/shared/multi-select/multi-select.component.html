@@ -1,0 +1,20 @@
+<div class="multi-select" [class.open]="open">
+  <button type="button" (click)="toggleOpen()">
+    {{ getSelectedNames() }}
+    <span class="arrow">&#9662;</span>
+  </button>
+  @if (open) {
+    <div class="dropdown">
+      <div class="dropdown-list">
+        <label *ngFor="let item of items">
+          <input type="checkbox"
+                 [value]="item.id"
+                 [checked]="selectedIds.includes(item.id)"
+                 (change)="toggleSelection(item.id, $event.target.checked)" />
+          {{ item.name }}
+        </label>
+      </div>
+      <button type="button" class="close-btn" (click)="close()">Apply</button>
+    </div>
+  }
+</div>

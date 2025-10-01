@@ -8,7 +8,7 @@ public class PlayersController(PlayersQueries playersQueries) : ControllerBase
 {
     [HttpGet("paged")]
     public async Task<IActionResult> GetPagedPlayers(
-        [FromQuery] int? teamId,
+        [FromQuery] List<int>? teamIds,
         [FromQuery] string? position,
         [FromQuery] string? orderBy,
         [FromQuery] string? orderDir,
@@ -17,7 +17,7 @@ public class PlayersController(PlayersQueries playersQueries) : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var players = await playersQueries.GetPagedPlayersAsync(
-            teamId,
+            teamIds,
             position,
             orderBy,
             orderDir,
@@ -25,5 +25,12 @@ public class PlayersController(PlayersQueries playersQueries) : ControllerBase
             pageSize,
             cancellationToken);
         return Ok(players);
+    }
+
+    [HttpGet("teams")]
+    public async Task<IActionResult> GetAllTeams(CancellationToken cancellationToken = default)
+    {
+        var teams = await playersQueries.GetAllTeamsAsync(cancellationToken);
+        return Ok(teams);
     }
 }
