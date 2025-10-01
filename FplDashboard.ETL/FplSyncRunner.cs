@@ -108,9 +108,9 @@ public class FplSyncRunner(
         
         return new RelevantGameWeeks(
             GetIdOrDefault(gameWeeks, currentGameWeekNumber),
-            GetIdOrDefault(gameWeeks, currentGameWeekNumber),
+            GetIdOrDefault(gameWeeks, previousGameWeekNumber),
             GetIdOrDefault(gameWeeks, _finalGameWeekNumber));
     }
 
-    private static int GetIdOrDefault(GameWeek[] gameWeek, int gameWeekNumber) => gameWeek.FirstOrDefault(gw => gw.GameWeekNumber == gameWeekNumber)?.Id ?? 0;
+    private static int GetIdOrDefault(GameWeek[] gameWeek, int gameWeekNumber) => gameWeek.FirstOrDefault(gw => gw.GameWeekNumber == gameWeekNumber)?.Id ?? gameWeekNumber;
 }

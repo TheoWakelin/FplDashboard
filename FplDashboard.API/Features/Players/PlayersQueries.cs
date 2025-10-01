@@ -4,7 +4,7 @@ using FplDashboard.API.Infrastructure;
 
 namespace FplDashboard.API.Features.Players;
 
-public class PlayersQueries(IDbConnectionFactory connectionFactory, GeneralQueries generalQueries)
+public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQueries generalQueries)
 {
     private static readonly Dictionary<string, string> AllowedOrderColumns = new()
     {

@@ -29,7 +29,7 @@ public class DashboardQueriesTests : IDisposable
 
         // Use the connection factory for DashboardQueries
         var connectionFactory = new TestSqliteConnectionFactory((SqliteConnection)_connection);
-        _dashboardQueries = new DashboardQueries(connectionFactory, new Mock<GeneralQueries>().Object);
+        _dashboardQueries = new DashboardQueries(connectionFactory, new Mock<IGeneralQueries>().Object);
     }
 
     public void Dispose()
@@ -47,7 +47,7 @@ public class DashboardQueriesTests : IDisposable
         var gameweek = new GameWeek { Id = 1, GameWeekNumber = 1, YearSeasonStarted = 2025 };
         var playerNews = new PlayerNews { PlayerId = 1, NewsAdded = DateTime.UtcNow, News = "Injured" };
         var teamGameWeekData = new TeamGameWeekData { TeamId = 1, GameWeekId = 1, StrengthAttackHome = 80, StrengthDefenceHome = 70, StrengthAttackAway = 75, StrengthDefenceAway = 65 };
-        var fixture = new Fixture { Id = 1, EventId = 1, GameWeek = gameweek, TeamAId = 1, TeamHId = 1, Finished = false };
+        var fixture = new Fixture { Id = 1, GameweekId = 1, GameWeek = gameweek, AwayTeamId = 1, HomeTeamId = 1, Finished = false };
         await _dbContext.Teams.AddAsync(team);
         await _dbContext.Players.AddAsync(player);
         await _dbContext.GameWeeks.AddAsync(gameweek);

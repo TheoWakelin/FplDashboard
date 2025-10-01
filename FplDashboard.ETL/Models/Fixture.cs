@@ -30,13 +30,13 @@ public class Fixture
     {
         return new FixtureInDb
         {
-            EventId = eventId,
-            TeamAId = TeamAId,
-            TeamHId = TeamHId,
+            GameweekId = eventId,
+            AwayTeamId = TeamAId,
+            HomeTeamId = TeamHId,
             Finished = Finished,
             KickoffTime = KickoffTime,
-            TeamAScore = TeamAScore,
-            TeamHScore = TeamHScore
+            AwayTeamScore = TeamAScore,
+            HomeTeamScore = TeamHScore
         };
     }
 }

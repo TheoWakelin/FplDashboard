@@ -60,16 +60,16 @@ public class FplDashboardDbContext(DbContextOptions<FplDashboardDbContext> optio
         modelBuilder.Entity<Fixture>()
             .HasOne(f => f.GameWeek)
             .WithMany(gw => gw.Fixtures)
-            .HasForeignKey(f => f.EventId);
+            .HasForeignKey(f => f.GameweekId);
         modelBuilder.Entity<Fixture>()
-            .HasOne(f => f.TeamA)
+            .HasOne(f => f.AwayTeam)
             .WithMany()
-            .HasForeignKey(f => f.TeamAId)
+            .HasForeignKey(f => f.AwayTeamId)
             .OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<Fixture>()
-            .HasOne(f => f.TeamH)
+            .HasOne(f => f.HomeTeam)
             .WithMany()
-            .HasForeignKey(f => f.TeamHId)
+            .HasForeignKey(f => f.HomeTeamId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Enum conversions

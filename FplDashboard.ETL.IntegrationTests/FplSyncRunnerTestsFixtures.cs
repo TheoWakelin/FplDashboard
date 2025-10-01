@@ -44,9 +44,9 @@ public class FplSyncRunnerTestsFixtures : FplSyncRunnerTestBase
         // Assert
         var fixtures = await Database.Fixtures.ToListAsync();
         Assert.Equal(2, fixtures.Count);
-        var gw4Fixture = fixtures.First(f => f.EventId == EventData.CurrentGameWeek.Id);
+        var gw4Fixture = fixtures.First(f => f.GameweekId == EventData.CurrentGameWeek.Id);
         Assert.True(gw4Fixture.Finished);
-        Assert.Equal(2, gw4Fixture.TeamAScore);
-        Assert.Equal(1, gw4Fixture.TeamHScore); 
+        Assert.Equal(2, gw4Fixture.AwayTeamScore);
+        Assert.Equal(1, gw4Fixture.HomeTeamScore); 
     }
 }

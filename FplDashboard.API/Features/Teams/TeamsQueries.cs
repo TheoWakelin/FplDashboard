@@ -4,7 +4,7 @@ using FplDashboard.API.Features.Shared;
 
 namespace FplDashboard.API.Features.Teams
 {
-    public class TeamsQueries(IDbConnectionFactory connectionFactory, GeneralQueries generalQueries)
+    public class TeamsQueries(IDbConnectionFactory connectionFactory, IGeneralQueries generalQueries)
     {
         public async Task<List<TeamFixturesDto>> GetTeamFixturesAsync(CancellationToken cancellationToken)
         {

@@ -20,5 +20,6 @@ public class Team
     public List<TeamGameWeekData> TeamGameWeekData { get; init; } = [];
 
     public List<Fixture> HomeFixtures { get; init; } = [];
+    
     public List<Fixture> AwayFixtures { get; init; } = [];
 }

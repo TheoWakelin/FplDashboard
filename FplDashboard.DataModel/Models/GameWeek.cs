@@ -19,7 +19,6 @@ public class GameWeek
 
     public int? HighestScore { get; set; }
     
-
     public List<PlayerGameWeekData> PlayerGameWeekData { get; init; } = [];
     
     public List<TeamGameWeekData> TeamGameWeekData { get; init; } = [];

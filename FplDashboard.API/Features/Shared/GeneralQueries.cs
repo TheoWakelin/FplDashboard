@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace FplDashboard.API.Features.Shared;
 
-public class GeneralQueries(IDbConnectionFactory connectionFactory, IMemoryCache memoryCache)
+public class GeneralQueries(IDbConnectionFactory connectionFactory, IMemoryCache memoryCache) : IGeneralQueries
 {
     private const string CacheKey = "CurrentGameWeekId";
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(12);
@@ -27,4 +27,3 @@ public class GeneralQueries(IDbConnectionFactory connectionFactory, IMemoryCache
         return id;
     }
 }
-

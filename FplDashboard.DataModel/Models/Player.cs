@@ -17,7 +17,8 @@ public class Player
     public Team? Team { get; set; }
     
     public Position Position { get; set; }
-
+    
+    [MaxLength(10)]
     public string Status { get; set; } = string.Empty;
     
     public double NowCost { get; set; }

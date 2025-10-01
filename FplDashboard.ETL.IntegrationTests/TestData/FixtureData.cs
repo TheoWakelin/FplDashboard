@@ -7,12 +7,12 @@ public static class FixtureData
 {
     public static List<Fixture> Gameweek38 =>
     [
-        new() { EventId = EventData.FinalGameWeek.Id, TeamAId = TeamData.ArsenalFromEtl.Id, TeamHId = TeamData.CrystalPalaceFromEtl.Id, Finished = false, TeamAScore = null, TeamHScore = null },
+        new() { GameweekId = EventData.FinalGameWeek.Id, AwayTeamId = TeamData.ArsenalFromEtl.Id, HomeTeamId = TeamData.CrystalPalaceFromEtl.Id, Finished = false, AwayTeamScore = null, HomeTeamScore = null },
     ];
 
     public static List<Fixture> InitialGameweek4 =>
     [
-        new() { EventId = EventData.CurrentGameWeekFromEtl.Id, TeamAId = TeamData.ArsenalFromEtl.Id, TeamHId = TeamData.CrystalPalaceFromEtl.Id, Finished = false, TeamAScore = null, TeamHScore = null },
+        new() { GameweekId = EventData.CurrentGameWeekFromEtl.Id, AwayTeamId = TeamData.ArsenalFromEtl.Id, HomeTeamId = TeamData.CrystalPalaceFromEtl.Id, Finished = false, AwayTeamScore = null, HomeTeamScore = null },
     ];
     
     public static List<FixtureFromEtl> Gameweek38FromEtl =>

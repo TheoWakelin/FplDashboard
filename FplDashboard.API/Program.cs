@@ -16,7 +16,7 @@ builder.Services.AddScoped<DashboardQueries>();
 builder.Services.AddScoped<TeamsQueries>();
 builder.Services.AddScoped<PlayersQueries>();
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<GeneralQueries>();
+builder.Services.AddScoped<IGeneralQueries, GeneralQueries>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularDev",

@@ -4,7 +4,7 @@ using FplDashboard.API.Features.Shared;
 
 namespace FplDashboard.API.Features.Dashboard;
 
-public class DashboardQueries(IDbConnectionFactory connectionFactory, GeneralQueries generalQueries)
+public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQueries generalQueries)
 {
     public async Task<object> GetDashboardDataAsync(CancellationToken cancellationToken)
     {
@@ -12,11 +12,11 @@ public class DashboardQueries(IDbConnectionFactory connectionFactory, GeneralQue
         var playerNews = await connection.QueryAsync(
             new CommandDefinition(
                 """
-                SELECT top 10 pn.NewsAdded, p.WebName AS PlayerName, t.Name AS TeamName, pn.News
-                                FROM PlayerNews pn
-                                JOIN Players p ON pn.PlayerId = p.Id
-                                JOIN Teams t ON p.TeamId = t.Id
-                                ORDER BY pn.NewsAdded DESC
+                SELECT TOP 10 pn.NewsAdded, p.WebName AS PlayerName, t.Name AS TeamName, pn.News
+                FROM PlayerNews pn
+                JOIN Players p ON pn.PlayerId = p.Id
+                JOIN Teams t ON p.TeamId = t.Id
+                ORDER BY pn.NewsAdded DESC
                 """,
                 parameters: null,
                 cancellationToken: cancellationToken
