@@ -1,0 +1,87 @@
+// Table wrapper
+.orderable-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  margin-top: 2rem;
+  background: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(25, 118, 210, 0.07);
+}
+
+// Table styles
+.orderable-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 1200px;
+  width: max-content;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.97rem;
+  background: #fff;
+  border-radius: 10px;
+}
+
+
+::ng-deep .orderable-table th,
+::ng-deep .orderable-table td {
+  padding: 0.7rem 1.1rem;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+  white-space: nowrap;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+::ng-deep .orderable-table th:last-child,
+::ng-deep .orderable-table td:last-child {
+  border-right: none;
+}
+
+::ng-deep .orderable-table th {
+  background: linear-gradient(90deg, #e3f2fd 0%, #ede7f6 100%);
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom: 2px solid #1976d2;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+}
+::ng-deep .orderable-table th.sticky-header,
+::ng-deep .orderable-table td.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  background: linear-gradient(90deg, #e3f2fd 0%, #ede7f6 100%);
+  border-right: 2px solid #1976d2;
+  min-width: 160px;
+  max-width: 160px;
+  width: 160px;
+  box-shadow: 2px 0 8px rgba(25, 118, 210, 0.07);
+  padding-left: 0.7rem;
+  padding-right: 0;
+}
+::ng-deep .orderable-table th.sticky-header.second,
+::ng-deep .orderable-table td.sticky-col.second {
+  left: 160px;
+}
+
+::ng-deep .orderable-table tr:hover td {
+  background: #e3f2fd;
+}
+::ng-deep .orderable-table tr:hover .sticky-col,
+::ng-deep .orderable-table tr:hover .sticky-header {
+  background: linear-gradient(90deg, #e3f2fd 0%, #ede7f6 100%) !important;
+}
+::ng-deep .orderable-table tr:hover .sticky-col,
+::ng-deep .orderable-table tr:hover .sticky-header {
+  z-index: 10;
+}
+
+::ng-deep .orderable-table thead tr {
+  height: 56px;
+}
+::ng-deep .orderable-table tbody tr {
+  transition: box-shadow 0.2s;
+}
+::ng-deep .orderable-table tbody tr:hover {
+  box-shadow: 0 2px 12px rgba(25, 118, 210, 0.09);
+}

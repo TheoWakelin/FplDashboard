@@ -1,0 +1,26 @@
+.sort-arrows {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.sort-arrows button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  color: #1976d2;
+  transition: color 0.2s;
+}
+.sort-arrows button.active {
+  color: #512da8;
+}
+.sort-arrows button[disabled] {
+  color: #ccc;
+  cursor: default;
+}
+.sort-arrows svg {
+  display: block;
+}

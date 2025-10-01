@@ -1,0 +1,8 @@
+<span class="sort-arrows">
+  <button (click)="onSort('desc')" [disabled]="disabledDesc" [class.active]="activeDir === 'desc'">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"></polyline></svg>
+  </button>
+  <button (click)="onSort('asc')" [disabled]="disabledAsc" [class.active]="activeDir === 'asc'">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </button>
+</span>

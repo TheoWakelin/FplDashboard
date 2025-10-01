@@ -1,0 +1,27 @@
+<div class="orderable-table-wrapper">
+  <table class="orderable-table">
+    <thead>
+      <tr>
+        @for (header of headers; track header.key) {
+          <th [ngClass]="{
+                'sticky-col': header.sticky,
+                'sticky-header': header.sticky
+              }"
+              [class]="header.cssClass ? header.cssClass : ''">
+            {{ header.label }}
+            @if (header.sortable) {
+              <app-sort-arrows
+                [column]="header.key"
+                [orderBy]="orderBy"
+                [orderDir]="orderDir"
+                (sort)="onSort(header.key, $event)"></app-sort-arrows>
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      <ng-content select="tr"></ng-content>
+    </tbody>
+  </table>
+</div>
