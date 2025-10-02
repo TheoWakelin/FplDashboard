@@ -3,17 +3,7 @@
     <h1 class="page-title">Players</h1>
     <span class="subheader">All FPL Players</span>
   </div>
-  @if (teamsLoaded) {
-    <div class="team-filter-wrapper">
-      <app-multi-select
-        [items]="teams"
-        [selectedIds]="selectedTeamIds"
-        [placeholder]="'All Teams'"
-        [maxLabelLength]="32"
-        (selectedIdsChange)="onTeamsSelected($event)">
-      </app-multi-select>
-    </div>
-  }
+  <app-players-filters (filterChange)="onFilterChange($event)"></app-players-filters>
   <div class="players-table-wrapper">
     <app-orderable-table
       [headers]="tableHeaders"
@@ -24,7 +14,7 @@
         <tr>
         <td class="sticky-col">{{ player.playerName }}</td>
         <td class="sticky-col second">{{ player.teamName }}</td>
-        <td>{{ player.position }}</td>
+  <td>{{ player.position | position }}</td>
         <td>{{ player.cost | cost }}</td>
         <td>{{ player.bonus }}</td>
         <td>{{ player.totalPoints }}</td>

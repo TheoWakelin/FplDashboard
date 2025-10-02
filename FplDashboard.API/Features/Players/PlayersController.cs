@@ -6,23 +6,13 @@ namespace FplDashboard.API.Features.Players;
 [Route("[controller]")]
 public class PlayersController(PlayersQueries playersQueries) : ControllerBase
 {
-    [HttpGet("paged")]
+    [HttpPost("paged")]
     public async Task<IActionResult> GetPagedPlayers(
-        [FromQuery] List<int>? teamIds,
-        [FromQuery] string? position,
-        [FromQuery] string? orderBy,
-        [FromQuery] string? orderDir,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
+        [FromBody] PlayerFilterRequest request,
         CancellationToken cancellationToken = default)
     {
         var players = await playersQueries.GetPagedPlayersAsync(
-            teamIds,
-            position,
-            orderBy,
-            orderDir,
-            page,
-            pageSize,
+            request,
             cancellationToken);
         return Ok(players);
     }

@@ -37,46 +37,50 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
     };
 
     public async Task<List<PlayerPagedDto>> GetPagedPlayersAsync(
-        List<int>? teamIds,
-        string? position,
-        string? orderBy,
-        string? orderDir,
-        int page,
-        int pageSize,
+        PlayerFilterRequest request,
         CancellationToken cancellationToken)
     {
         var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
         var sql = await File.ReadAllTextAsync("Features/Players/Sql/PlayersPaged.sql", cancellationToken);
 
         // Sanitize orderBy
-        var orderByColumn = AllowedOrderColumns.ContainsKey(orderBy ?? "") ? AllowedOrderColumns[orderBy!] : "p.TotalPoints";
-        var orderDirection = (orderDir?.ToUpper() == "ASC") ? "ASC" : "DESC";
-        
-        // Dapper cannot handle a null check with an IN clause, so conditionally add the filter.
-        var teamsFilter = teamIds != null && teamIds.Count != 0 ? "AND p.TeamId IN @TeamIds" : "";
+        var orderByColumn = AllowedOrderColumns.ContainsKey(request.OrderBy ?? "") ? AllowedOrderColumns[request.OrderBy!] : "p.TotalPoints";
+        var orderDirection = (request.OrderDir?.ToUpper() == "ASC") ? "ASC" : "DESC";
+
+        // Build filters
+        var teamFilter = BuildInFilter(request.TeamIds, "p.TeamId", "TeamIds");
+        var positionFilter = BuildInFilter(request.PositionIds, "p.Position", "PositionIds");
 
         // Replace placeholders in SQL
         sql = sql.Replace("{OrderBy}", orderByColumn)
             .Replace("{OrderDir}", orderDirection)
-            .Replace("{TeamFilter}", teamsFilter);
+            .Replace("{TeamFilter}", teamFilter)
+            .Replace("{PositionFilter}", positionFilter);
 
-        var offset = (page - 1) * pageSize;
+        var offset = (request.Page - 1) * request.PageSize;
 
         var players = await connectionFactory.CreateConnection().QueryAsync<PlayerPagedDto>(
             new CommandDefinition(
                 sql,
                 parameters: new
                 {
-                    TeamIds = teamIds,
-                    Position = position,
+                    TeamIds = request.TeamIds,
+                    PositionIds = request.PositionIds,
+                    PlayerName = request.PlayerName,
                     Offset = offset,
-                    PageSize = pageSize,
-                    CurrentGameWeekId = currentGameWeekId
+                    PageSize = request.PageSize,
+                    CurrentGameWeekId = currentGameWeekId,
+                    MinMinutes = request.MinMinutes
                 },
                 cancellationToken: cancellationToken
             )
         );
         return players.ToList();
+    }
+
+    private static string BuildInFilter(List<int>? ids, string column, string paramName)
+    {
+        return ids is { Count: > 0 } ? $"AND {column} IN @{paramName}" : "";
     }
 
     public async Task<List<TeamListDto>> GetAllTeamsAsync(CancellationToken cancellationToken)

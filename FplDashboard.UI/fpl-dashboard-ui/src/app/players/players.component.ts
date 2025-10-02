@@ -2,40 +2,21 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 import { CostPipe } from '../shared/pipes/cost.pipe';
+import { PositionPipe } from '../shared/pipes/position.pipe';
 import { OrderableTableComponent, TableHeader } from '../shared/orderable-table/orderable-table.component';
-import { FormsModule } from '@angular/forms';
-import { MultiSelectComponent } from '../shared/multi-select/multi-select.component';
+import { PlayersFiltersComponent, PlayerFilterModel } from './filters/players-filters.component';
 
 import { ApiDataService } from '../api-data.service';
 import { PlayerPagedDto } from './player-paged.model';
-import { TeamListDto } from '../teams/team-list.model';
 
 @Component({
   selector: 'app-players',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, CostPipe, OrderableTableComponent, FormsModule, MultiSelectComponent],
+  imports: [CommonModule, LoadingSpinnerComponent, CostPipe, OrderableTableComponent, PositionPipe, PlayersFiltersComponent],
   templateUrl: './players.component.html',
   styleUrls: ['./players.component.scss']
 })
 export class PlayersComponent {
-  onTeamsSelected(teamIds: number[]) {
-    this.selectedTeamIds = teamIds;
-    this.fetchPlayers();
-  }
-  getSelectedTeamNames(): string {
-    if (!this.selectedTeamIds.length) return 'All Teams';
-    return this.teams.filter(t => this.selectedTeamIds.includes(t.id)).map(t => t.name).join(', ');
-  }
-
-  toggleTeamSelection(teamId: number, checked: boolean) {
-    if (checked) {
-      if (!this.selectedTeamIds.includes(teamId)) {
-        this.selectedTeamIds = [...this.selectedTeamIds, teamId];
-      }
-    } else {
-      this.selectedTeamIds = this.selectedTeamIds.filter(id => id !== teamId);
-    }
-  }
   players: PlayerPagedDto[] = [];
   loading = true;
   page = 1;
@@ -44,10 +25,7 @@ export class PlayersComponent {
   orderBy: string = '';
   orderDir: '' | 'asc' | 'desc' = '';
 
-  teams: TeamListDto[] = [];
-  selectedTeamIds: number[] = [];
-  teamsLoaded = false;
-  teamSelectOpen = false;
+  filterModel: PlayerFilterModel = {};
 
   tableHeaders: TableHeader[] = [
     { key: 'PlayerName', label: 'Player Name', sticky: true, sortable: true },
@@ -80,47 +58,33 @@ export class PlayersComponent {
 
   constructor(private api: ApiDataService) {}
 
-  ngOnInit() {
-    this.api.getTeamsList().subscribe({
-      next: (teams) => {
-        this.teams = teams;
-        this.teamsLoaded = true;
-        this.fetchPlayers();
-      },
-      error: () => {
-        this.teamsLoaded = true;
-        this.fetchPlayers();
-      }
-    });
-  }
+  // No need to fetch teams here
 
   fetchPlayers() {
     this.loading = true;
-    this.api.getPagedPlayers(
-      this.page,
-      this.pageSize,
-      this.orderBy,
-      this.orderDir,
-      this.selectedTeamIds.length > 0 ? this.selectedTeamIds : undefined
-    ).subscribe({
-      next: (data) => {
-        this.players = data;
-        this.loading = false;
+    const request = {
+      page: this.page,
+      pageSize: this.pageSize,
+      orderBy: this.orderBy,
+      orderDir: this.orderDir,
+      ...this.filterModel
+    };
+    this.api.getPagedPlayers(request).subscribe({
+      next: (players) => {
+        this.players = players;
       },
-      error: () => {
+      complete: () => {
         this.loading = false;
       }
     });
   }
 
-  openTeamSelect() {
-    this.teamSelectOpen = true;
-  }
-
-  closeTeamSelect() {
-    this.teamSelectOpen = false;
+  onFilterChange(model: PlayerFilterModel) {
+    this.filterModel = model;
+    this.page = 1;
     this.fetchPlayers();
   }
+
 
   setOrder(orderBy: string, orderDir: 'asc' | 'desc') {
     this.orderBy = orderBy;

@@ -27,17 +27,27 @@ export class ApiDataService {
         return this.http.get<TeamListDto[]>(`${this.playersEndpoint}/teams`);
     }
 
-        getPagedPlayers(
-            page: number = 1,
-            pageSize: number = 20,
-            orderBy?: string,
-            orderDir?: string,
-            teamIds?: number[]
-        ): Observable<PlayerPagedDto[]> {
-            const params: any = { page, pageSize };
-            if (orderBy) params.orderBy = orderBy;
-            if (orderDir) params.orderDir = orderDir;
-            if (teamIds && teamIds.length > 0) params.teamIds = teamIds;
-            return this.http.get<PlayerPagedDto[]>(`${this.playersEndpoint}/paged`, { params });
+        getPagedPlayers(filter: {
+            page?: number;
+            pageSize?: number;
+            orderBy?: string;
+            orderDir?: string;
+            teamIds?: number[];
+            positionIds?: number[];
+            playerName?: string;
+            minMinutes?: number;
+        }): Observable<PlayerPagedDto[]> {
+            // Map to backend model
+            const body: any = {
+                Page: filter.page ?? 1,
+                PageSize: filter.pageSize ?? 20,
+                OrderBy: filter.orderBy ?? undefined,
+                OrderDir: filter.orderDir ?? undefined,
+                TeamIds: filter.teamIds?.length ? filter.teamIds : undefined,
+                PositionIds: filter.positionIds?.length ? filter.positionIds : undefined,
+                PlayerName: filter.playerName ?? undefined,
+                MinMinutes: filter.minMinutes ?? undefined
+            };
+            return this.http.post<PlayerPagedDto[]>(`${this.playersEndpoint}/paged`, body);
         }
 }

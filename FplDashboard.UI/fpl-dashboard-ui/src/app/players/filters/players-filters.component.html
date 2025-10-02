@@ -1,0 +1,29 @@
+<div class="filters-row">
+  <app-multi-select
+    [items]="teams"
+    [selectedIds]="selectedTeamIds"
+    [placeholder]="'All Teams'"
+    [maxLabelLength]="32"
+    (selectedIdsChange)="onTeamsSelected($event)">
+  </app-multi-select>
+  <app-multi-select
+    [items]="positionOptions"
+    [selectedIds]="selectedPositions"
+    placeholder="Positions"
+    (selectedIdsChange)="onPositionsSelected($event)">
+  </app-multi-select>
+  <input
+    type="text"
+    [value]="playerName"
+    (input)="onPlayerNameChange($event)"
+    placeholder="Search Player Name"
+    class="player-name-input" />
+  <input
+    type="number"
+    min="0"
+    [value]="minMinutes ?? ''"
+    (blur)="onMinMinutesBlur($event)"
+    placeholder="Min Minutes"
+    class="min-minutes-input" />
+  <button type="button" class="reset-btn" (click)="onResetFilters()">Reset</button>
+</div>
