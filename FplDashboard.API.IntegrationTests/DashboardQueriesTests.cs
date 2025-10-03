@@ -6,11 +6,11 @@
 // using Microsoft.Data.Sqlite;
 // using Microsoft.EntityFrameworkCore;
 // using Moq;
-// using FplDashboard.API.Tests.Infrastructure;
+// using FplDashboard.API.IntegrationTests.Infrastructure;
 // using AutoFixture;
 // using Microsoft.AspNetCore.Mvc.Testing;
 //
-// namespace FplDashboard.API.Tests;
+// namespace FplDashboard.API.IntegrationTests;
 //
 // public class DashboardQueriesTests : BaseIntegrationTest
 // {

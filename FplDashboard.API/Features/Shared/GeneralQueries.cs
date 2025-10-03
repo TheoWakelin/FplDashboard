@@ -1,18 +1,15 @@
 using Dapper;
 using FplDashboard.API.Infrastructure;
 using FplDashboard.DataModel.Models;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace FplDashboard.API.Features.Shared;
 
-public class GeneralQueries(IDbConnectionFactory connectionFactory, IMemoryCache memoryCache) : IGeneralQueries
+public class GeneralQueries(IDbConnectionFactory connectionFactory, ICacheService cacheService) : IGeneralQueries
 {
-    private const string CacheKey = "CurrentGameWeekId";
-    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(12);
 
     public async Task<int> GetCurrentGameWeekIdAsync(CancellationToken cancellationToken)
     {
-        if (memoryCache.TryGetValue(CacheKey, out int cachedId))
+        if (cacheService.Get<int?>(CacheKeys.CurrentGameWeekId) is { } cachedId)
             return cachedId;
 
         using var connection = connectionFactory.CreateConnection();
@@ -23,7 +20,7 @@ public class GeneralQueries(IDbConnectionFactory connectionFactory, IMemoryCache
                 cancellationToken: cancellationToken
             )
         );
-        memoryCache.Set(CacheKey, id, CacheDuration);
+        cacheService.Set(CacheKeys.CurrentGameWeekId, id);
         return id;
     }
 }

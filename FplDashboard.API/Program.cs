@@ -29,6 +29,7 @@ public class Program
         builder.Services.AddScoped<TeamsQueries>();
         builder.Services.AddScoped<PlayersQueries>();
         builder.Services.AddMemoryCache();
+        builder.Services.AddScoped<ICacheService, MemoryCacheService>();
         builder.Services.AddScoped<IGeneralQueries, GeneralQueries>();
         builder.Services.AddCors(options =>
         {
