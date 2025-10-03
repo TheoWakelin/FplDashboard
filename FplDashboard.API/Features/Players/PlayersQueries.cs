@@ -41,11 +41,12 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
         CancellationToken cancellationToken)
     {
         var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
-        var sql = await File.ReadAllTextAsync("Features/Players/Sql/PlayersPaged.sql", cancellationToken);
+        var sql = SqlResourceLoader.GetSql("FplDashboard.API.Features.Players.Sql.PlayersPaged.sql");
 
         // Sanitize orderBy
         var orderByColumn = AllowedOrderColumns.ContainsKey(request.OrderBy ?? "") ? AllowedOrderColumns[request.OrderBy!] : "p.TotalPoints";
         var orderDirection = (request.OrderDir?.ToUpper() == "ASC") ? "ASC" : "DESC";
+        var secondaryOrder = orderByColumn == "p.WebName" ? "" : ", p.WebName";
 
         // Build filters
         var teamFilter = BuildInFilter(request.TeamIds, "p.TeamId", "TeamIds");
@@ -55,7 +56,8 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
         sql = sql.Replace("{OrderBy}", orderByColumn)
             .Replace("{OrderDir}", orderDirection)
             .Replace("{TeamFilter}", teamFilter)
-            .Replace("{PositionFilter}", positionFilter);
+            .Replace("{PositionFilter}", positionFilter)
+            .Replace("{SecondaryOrder}", secondaryOrder);
 
         var offset = (request.Page - 1) * request.PageSize;
 

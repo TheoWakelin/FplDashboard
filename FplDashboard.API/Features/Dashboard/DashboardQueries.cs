@@ -25,7 +25,8 @@ public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQu
 
         var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
 
-        var topBottomSql = await File.ReadAllTextAsync("Features/Dashboard/Sql/TopBottomTeamFixtures.sql", cancellationToken);
+        var topBottomSql =
+            SqlResourceLoader.GetSql("FplDashboard.API.Features.Dashboard.Sql.TopBottomTeamFixtures.sql");
         var topBottomTeams = await connection.QueryAsync<TeamStrengthDto>(
             new CommandDefinition(
                 topBottomSql,
@@ -38,7 +39,7 @@ public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQu
         {
             playerNews,
             topTeams = topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Top),
-            bottomTeams =  topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Bottom),
+            bottomTeams = topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Bottom),
         };
     }
 }

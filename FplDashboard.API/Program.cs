@@ -6,30 +6,44 @@ using FplDashboard.API.Infrastructure;
 using FplDashboard.DataModel;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace FplDashboard.API;
 
-builder.Services.AddDbContext<FplDashboardDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("FplDashboard")));
-builder.Services.AddControllers();
-builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
-builder.Services.AddScoped<DashboardQueries>();
-builder.Services.AddScoped<TeamsQueries>();
-builder.Services.AddScoped<PlayersQueries>();
-builder.Services.AddMemoryCache();
-builder.Services.AddScoped<IGeneralQueries, GeneralQueries>();
-builder.Services.AddCors(options =>
+public class Program
 {
-    options.AddPolicy("AllowAngularDev",
-        policy => policy
-            .WithOrigins("http://localhost:4200")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-    );
-});
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        ConfigureServices(builder);
+        var app = builder.Build();
+        Configure(app);
+        app.Run();
+    }
 
-var app = builder.Build();
-app.UseCors("AllowAngularDev");
+    private static void ConfigureServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddDbContext<FplDashboardDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("FplDashboard")));
+        builder.Services.AddControllers();
+        builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
+        builder.Services.AddScoped<DashboardQueries>();
+        builder.Services.AddScoped<TeamsQueries>();
+        builder.Services.AddScoped<PlayersQueries>();
+        builder.Services.AddMemoryCache();
+        builder.Services.AddScoped<IGeneralQueries, GeneralQueries>();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAngularDev",
+                policy => policy
+                    .WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+            );
+        });
+    }
 
-app.MapControllers();
-
-app.Run();
+    private static void Configure(WebApplication app)
+    {
+        app.UseCors("AllowAngularDev");
+        app.MapControllers();
+    }
+}

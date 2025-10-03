@@ -34,5 +34,5 @@ WHERE p.Status = 'a'
   {TeamFilter}
   AND (@PlayerName IS NULL OR p.WebName LIKE '%' + @PlayerName + '%')
   AND (@MinMinutes IS NULL OR p.Minutes >= @MinMinutes)
-ORDER BY {OrderBy} {OrderDir}, p.WebName
+ORDER BY {OrderBy} {OrderDir}{SecondaryOrder}
 OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
