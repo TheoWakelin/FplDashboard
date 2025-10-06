@@ -1,4 +1,4 @@
-namespace FplDashboard.API.Features.Dashboard;
+namespace FplDashboard.API.Features.Dashboard.Models;
 
 public record TeamStrengthDto(string TeamName, int CumulativeStrength, TeamStrengthCategory Category);
 

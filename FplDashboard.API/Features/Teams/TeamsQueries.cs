@@ -1,13 +1,12 @@
 using Dapper;
 using FplDashboard.API.Infrastructure;
 using FplDashboard.API.Features.Shared;
+using FplDashboard.API.Features.Teams.Models;
 
 namespace FplDashboard.API.Features.Teams
 {
     public class TeamsQueries(IDbConnectionFactory connectionFactory, IGeneralQueries generalQueries, ICacheService cacheService)
-    {
-        private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(30);
-
+    { 
         public async Task<List<TeamFixturesDto>> GetTeamFixturesAsync(CancellationToken cancellationToken)
         {
             if (cacheService.Get<List<TeamFixturesDto>>(CacheKeys.TeamFixtures) is { } cachedFixtures)
@@ -35,7 +34,7 @@ namespace FplDashboard.API.Features.Teams
                 .OrderByDescending(t => t.CumulativeStrength)
                 .ToList();
 
-            cacheService.Set(CacheKeys.TeamFixtures, teamFixtures, CacheDuration);
+            cacheService.Set(CacheKeys.TeamFixtures, teamFixtures);
             return teamFixtures;
         }
     }

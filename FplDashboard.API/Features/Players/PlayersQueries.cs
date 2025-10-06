@@ -1,4 +1,5 @@
 using Dapper;
+using FplDashboard.API.Features.Players.Models;
 using FplDashboard.API.Features.Shared;
 using FplDashboard.API.Infrastructure;
 

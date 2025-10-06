@@ -28,28 +28,28 @@
         <ng-container matColumnDef="playerName">
           <th mat-header-cell *matHeaderCellDef>Name</th>
           <td mat-cell *matCellDef="let playerNewsItem" class="player-name-cell">
-            {{ playerNewsItem.PlayerName }}
+            {{ playerNewsItem.playerName }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="teamName">
           <th mat-header-cell *matHeaderCellDef>Team</th>
           <td mat-cell *matCellDef="let playerNewsItem" class="team-name-cell">
-            {{ playerNewsItem.TeamName }}
+            {{ playerNewsItem.teamName }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="news">
           <th mat-header-cell *matHeaderCellDef>News</th>
           <td mat-cell *matCellDef="let playerNewsItem" class="news-cell">
-            {{ playerNewsItem.News }}
+            {{ playerNewsItem.news }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="newsAdded">
           <th mat-header-cell *matHeaderCellDef>Date Added</th>
           <td mat-cell *matCellDef="let playerNewsItem" class="news-added-cell">
-            {{ playerNewsItem.NewsAdded | humanizeDate }}
+            {{ playerNewsItem.newsAdded | humanizeDate }}
           </td>
         </ng-container>
 

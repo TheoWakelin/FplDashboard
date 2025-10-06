@@ -3,7 +3,7 @@ namespace FplDashboard.API.Features.Shared
     public interface ICacheService
     {
         T? Get<T>(string key);
-        void Set<T>(string key, T value, TimeSpan? duration = null);
+        void Set<T>(string key, T value);
     }
 }
 

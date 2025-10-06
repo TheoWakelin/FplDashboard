@@ -3,6 +3,7 @@ using Moq;
 using Moq.Dapper;
 using FplDashboard.API.Features.Teams;
 using FplDashboard.API.Features.Shared;
+using FplDashboard.API.Features.Teams.Models;
 using FplDashboard.API.UnitTests.Infrastructure;
 
 namespace FplDashboard.API.UnitTests.Features.Teams
@@ -45,7 +46,7 @@ namespace FplDashboard.API.UnitTests.Features.Teams
 
             // Assert
             MockConnectionFactory.Verify(m => m.CreateConnection(), Times.Once);
-            MockCacheService.Verify(m => m.Set(CacheKeys.TeamFixtures, It.IsAny<List<TeamFixturesDto>>(), It.IsAny<TimeSpan>()), Times.Once);
+            MockCacheService.Verify(m => m.Set(CacheKeys.TeamFixtures, It.IsAny<List<TeamFixturesDto>>()), Times.Once);
         }
     }
 }

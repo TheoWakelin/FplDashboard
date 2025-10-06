@@ -1,15 +1,19 @@
 using Dapper;
+using FplDashboard.API.Features.Dashboard.Models;
 using FplDashboard.API.Infrastructure;
 using FplDashboard.API.Features.Shared;
 
 namespace FplDashboard.API.Features.Dashboard;
 
-public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQueries generalQueries)
+public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQueries generalQueries, ICacheService cacheService)
 {
-    public async Task<object> GetDashboardDataAsync(CancellationToken cancellationToken)
+    public async Task<DashboardDataDto> GetDashboardDataAsync(CancellationToken cancellationToken)
     {
+        if (cacheService.Get<DashboardDataDto>(CacheKeys.DashboardData) is { } cachedDashboard)
+            return cachedDashboard;
+
         using var connection = connectionFactory.CreateConnection();
-        var playerNews = await connection.QueryAsync(
+        var playerNews = await connection.QueryAsync<PlayerNewsDto>(
             new CommandDefinition(
                 """
                 SELECT TOP 10 pn.NewsAdded, p.WebName AS PlayerName, t.Name AS TeamName, pn.News
@@ -25,8 +29,7 @@ public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQu
 
         var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
 
-        var topBottomSql =
-            SqlResourceLoader.GetSql("FplDashboard.API.Features.Dashboard.Sql.TopBottomTeamFixtures.sql");
+        var topBottomSql = SqlResourceLoader.GetSql("FplDashboard.API.Features.Dashboard.Sql.TopBottomTeamFixtures.sql");
         var topBottomTeams = await connection.QueryAsync<TeamStrengthDto>(
             new CommandDefinition(
                 topBottomSql,
@@ -35,11 +38,14 @@ public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQu
             )
         );
 
-        return new
+        var dashboardData = new DashboardDataDto
         {
-            playerNews,
-            topTeams = topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Top),
-            bottomTeams = topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Bottom),
+            PlayerNews = playerNews,
+            TopTeams = topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Top),
+            BottomTeams = topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Bottom),
         };
+
+        cacheService.Set(CacheKeys.DashboardData, dashboardData);
+        return dashboardData;
     }
 }

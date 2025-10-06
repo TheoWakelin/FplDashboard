@@ -1,3 +1,4 @@
+using FplDashboard.API.Features.Players.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FplDashboard.API.Features.Players;

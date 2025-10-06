@@ -13,9 +13,9 @@ namespace FplDashboard.API.Features.Shared
             return default;
         }
 
-        public void Set<T>(string key, T value, TimeSpan? duration = null)
+        public void Set<T>(string key, T value)
         {
-            cache.Set(key, value, duration ?? DefaultDuration);
+            cache.Set(key, value, DefaultDuration);
         }
     }
 }

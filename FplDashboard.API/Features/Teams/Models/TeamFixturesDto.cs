@@ -1,4 +1,4 @@
-namespace FplDashboard.API.Features.Teams
+namespace FplDashboard.API.Features.Teams.Models
 {
     public class TeamFixturesDto
     {

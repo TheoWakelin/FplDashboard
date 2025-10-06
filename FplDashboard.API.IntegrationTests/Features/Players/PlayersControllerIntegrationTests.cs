@@ -1,4 +1,5 @@
 using FplDashboard.API.Features.Players;
+using FplDashboard.API.Features.Players.Models;
 using FplDashboard.API.Tests.Infrastructure;
 using FplDashboard.DataModel.Models;
 using Microsoft.EntityFrameworkCore;

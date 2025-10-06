@@ -4,6 +4,6 @@ namespace FplDashboard.API.Features.Shared
     {
         public const string CurrentGameWeekId = "CurrentGameWeekId";
         public const string TeamFixtures = "TeamFixtures";
+        public const string DashboardData = "DashboardData";
     }
 }
-

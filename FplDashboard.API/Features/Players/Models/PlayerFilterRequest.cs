@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FplDashboard.API.Features.Players;
+namespace FplDashboard.API.Features.Players.Models;
 
 public class PlayerFilterRequest
 {
