@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 
-namespace FplDashboard.API.Tests.Infrastructure;
+namespace FplDashboard.API.IntegrationTests.Infrastructure;
 
 public class ApiTestClient(HttpClient httpClient)
 {

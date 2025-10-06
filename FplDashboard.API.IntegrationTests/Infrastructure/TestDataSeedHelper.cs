@@ -1,8 +1,9 @@
 using AutoFixture;
+using FplDashboard.API.IntegrationTests.Infrastructure.Models;
 using FplDashboard.DataModel.Models;
 using Fixture = AutoFixture.Fixture;
 
-namespace FplDashboard.API.Tests.Infrastructure;
+namespace FplDashboard.API.IntegrationTests.Infrastructure;
 
 public static class TestDataSeedHelper
 {

@@ -1,6 +1,7 @@
+using FplDashboard.API.IntegrationTests.Infrastructure.Models;
 using FplDashboard.DataModel.Models;
 
-namespace FplDashboard.API.Tests.Infrastructure;
+namespace FplDashboard.API.IntegrationTests.Infrastructure;
 
 public static class TestConfiguration
 {
@@ -14,20 +15,28 @@ public static class TestConfiguration
     {
         public static int DefaultPlayerCount => SeededPlayers.Length;
         public static int DefaultTeamCount => DefaultTeamNames.Length;
-        public static string[] DefaultTeamNames => ["Team Alpha", "Team Beta"];
+        public static string[] DefaultTeamNames => [
+            "Team Alpha",
+            "Team Beta",
+            "Team Gamma",
+            "Team Delta",
+            "Team Echo",
+            "Team Foxtrot"
+        ];
         
         public static SeededPlayer[] SeededPlayers =>
         [
-            new() { Name = "Alice", Position = Position.GoalKeeper },
-            new() { Name = "Bob", Position = Position.Defender },
-            new() { Name = "Charlie", Position = Position.GoalKeeper },
-            new() { Name = "Dana", Position = Position.Midfielder }
+            new("Alice", Position.GoalKeeper),
+            new("Bob", Position.Defender),
+            new("Charlie", Position.GoalKeeper),
+            new("Dana", Position.Midfielder) 
+        ];
+        
+        public static SeededTeamStrength[] SeededTeamStrengths =>
+        [
+            new("Team Alpha", 5, 5, 4, 4),
+            new("Team Beta", 1, 1, 2, 2)
+            // All others default to 3,3,3,3 in the seeder
         ];
     }
-}
-
-public class SeededPlayer
-{
-    public string Name { get; init; } = string.Empty;
-    public Position Position { get; init; }
 }

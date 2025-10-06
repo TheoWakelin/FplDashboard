@@ -1,10 +1,9 @@
-using FplDashboard.API.Features.Players;
 using FplDashboard.API.Features.Players.Models;
-using FplDashboard.API.Tests.Infrastructure;
+using FplDashboard.API.IntegrationTests.Infrastructure;
 using FplDashboard.DataModel.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FplDashboard.API.Tests.Features.Players;
+namespace FplDashboard.API.IntegrationTests.Features.Players;
 
 public class PlayersControllerIntegrationTests(DatabaseFixture fixture) : BaseIntegrationTest(fixture)
 {
@@ -12,8 +11,6 @@ public class PlayersControllerIntegrationTests(DatabaseFixture fixture) : BaseIn
     private const string TeamsEndpoint = "/players/teams";
     private const int GoalKeeper = (int)Position.GoalKeeper;
     
-    private ApiTestClient ApiClient => new(Client);
-
     [Fact]
     public async Task GetPagedPlayers_DefaultPaginationAndFilters_ReturnsAllPlayers()
     {
@@ -40,7 +37,7 @@ public class PlayersControllerIntegrationTests(DatabaseFixture fixture) : BaseIn
     [Fact]
     public async Task GetPagedPlayers_FilterByTeamId_ReturnsOnlyTeamPlayers()
     {
-        var team = Fixture.SeededTeams[0];
+        var team = Fixture.SeededData.Teams[0];
         var request = new PlayerFilterRequest { TeamIds = [team.Id] };
         var result = await ApiClient.PostAndExpectSuccessAsync<List<PlayerPagedDto>>(PlayersPagedEndpoint, request);
         Assert.All(result, p => Assert.Equal(team.Name, p.TeamName));
@@ -49,7 +46,7 @@ public class PlayersControllerIntegrationTests(DatabaseFixture fixture) : BaseIn
     [Fact]
     public async Task GetPagedPlayers_MultipleTeamIds_ReturnsPlayersFromAllTeams()
     {
-        var teamIds = Fixture.SeededTeams.Select(t => t.Id).ToList();
+        var teamIds = Fixture.SeededData.Teams.Select(t => t.Id).ToList();
         var request = new PlayerFilterRequest { TeamIds = teamIds };
         var result = await ApiClient.PostAndExpectSuccessAsync<List<PlayerPagedDto>>(PlayersPagedEndpoint, request);
         Assert.Equal(TestConfiguration.TestData.DefaultPlayerCount, result.Count);
@@ -123,7 +120,7 @@ public class PlayersControllerIntegrationTests(DatabaseFixture fixture) : BaseIn
     [Fact]
     public async Task GetPagedPlayers_CombinedFilters_ReturnsCorrectResults()
     {
-        var filteredTeam = Fixture.SeededTeams[0];
+        var filteredTeam = Fixture.SeededData.Teams[0];
         var request = new PlayerFilterRequest 
         { 
             TeamIds = [filteredTeam.Id],

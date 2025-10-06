@@ -15,7 +15,7 @@ namespace FplDashboard.API.Features.Teams
             using var connection = connectionFactory.CreateConnection();
             var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
 
-            var teamFixturesSql = SqlResourceLoader.GetSql("FplDashboard.API.Features.Teams.Sql.TeamFixtures.sql");
+            var teamFixturesSql = await SqlResourceLoader.GetSql("FplDashboard.API.Features.Teams.Sql.TeamFixtures.sql");
             var fixturesRaw = await connection.QueryAsync<FixtureScoreDto>(
                 new CommandDefinition(
                     teamFixturesSql,

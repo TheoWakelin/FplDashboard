@@ -58,7 +58,7 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
     private async Task<List<PlayerPagedDto>> FetchPlayersFromDatabase(PlayerFilterRequest request, CancellationToken cancellationToken)
     {
         var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
-        var sql = SqlResourceLoader.GetSql("FplDashboard.API.Features.Players.Sql.PlayersPaged.sql");
+        var sql = await SqlResourceLoader.GetSql("FplDashboard.API.Features.Players.Sql.PlayersPaged.sql");
 
         // Sanitize orderBy
         var orderByColumn = AllowedOrderColumns.ContainsKey(request.OrderBy ?? "") ? AllowedOrderColumns[request.OrderBy!] : "p.TotalPoints";

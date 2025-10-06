@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 
-namespace FplDashboard.API.Tests.Infrastructure;
+namespace FplDashboard.API.IntegrationTests.Infrastructure;
 
 public class TestWebApplicationFactory(string testConnectionString) : WebApplicationFactory<Program>
 {

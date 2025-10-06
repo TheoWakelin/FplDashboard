@@ -12,6 +12,24 @@ public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQu
         if (cacheService.Get<DashboardDataDto>(CacheKeys.DashboardData) is { } cachedDashboard)
             return cachedDashboard;
 
+        var playerNewsTask = FetchPlayerNewsFromDatabase(cancellationToken);
+        var fixtureDifficultiesTask = FetchFixtureDifficultiesFromDatabase(cancellationToken);
+        
+        await Task.WhenAll(playerNewsTask, fixtureDifficultiesTask);
+
+        var dashboardData = new DashboardDataDto
+        {
+            PlayerNews = playerNewsTask.Result,
+            TopTeams = fixtureDifficultiesTask.Result.Where(t => t.Category == TeamStrengthCategory.Top),
+            BottomTeams = fixtureDifficultiesTask.Result.Where(t => t.Category == TeamStrengthCategory.Bottom),
+        };
+
+        cacheService.Set(CacheKeys.DashboardData, dashboardData);
+        return dashboardData;
+    }
+    
+    private async Task<List<PlayerNewsDto>> FetchPlayerNewsFromDatabase(CancellationToken cancellationToken)
+    {
         using var connection = connectionFactory.CreateConnection();
         var playerNews = await connection.QueryAsync<PlayerNewsDto>(
             new CommandDefinition(
@@ -26,26 +44,21 @@ public class DashboardQueries(IDbConnectionFactory connectionFactory, IGeneralQu
                 cancellationToken: cancellationToken
             )
         );
-
+        return playerNews.ToList();
+    }
+    
+    private async Task<IEnumerable<TeamStrengthDto>> FetchFixtureDifficultiesFromDatabase(CancellationToken cancellationToken)
+    {
+        using var connection = connectionFactory.CreateConnection();
         var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
 
-        var topBottomSql = SqlResourceLoader.GetSql("FplDashboard.API.Features.Dashboard.Sql.TopBottomTeamFixtures.sql");
-        var topBottomTeams = await connection.QueryAsync<TeamStrengthDto>(
+        var topBottomSql = await SqlResourceLoader.GetSql("FplDashboard.API.Features.Dashboard.Sql.TopBottomTeamFixtures.sql");
+        return await connection.QueryAsync<TeamStrengthDto>(
             new CommandDefinition(
                 topBottomSql,
                 parameters: new { CurrentGameWeekId = currentGameWeekId },
                 cancellationToken: cancellationToken
             )
         );
-
-        var dashboardData = new DashboardDataDto
-        {
-            PlayerNews = playerNews,
-            TopTeams = topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Top),
-            BottomTeams = topBottomTeams.Where(t => t.Category == TeamStrengthCategory.Bottom),
-        };
-
-        cacheService.Set(CacheKeys.DashboardData, dashboardData);
-        return dashboardData;
     }
 }
