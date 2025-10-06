@@ -46,4 +46,60 @@ public class PlayerFilterRequest
     /// </summary>
     [Range(1, 200, ErrorMessage = "Page size must be between 1 and 200")]
     public int PageSize { get; set; } = 20;
+    
+    public bool ShouldCacheFilters()
+    {
+        return IsDefaultView() ||
+               HasOnlyPositionFilter() ||
+               HasOnlyTeamFilter();  
+    }
+
+    public string GenerateCacheKey()
+    {
+        var keyParts = new List<string> { "players" };
+
+        if (PositionIds is not null && PositionIds.Count > 0)
+            keyParts.Add($"pos_{string.Join(",", PositionIds.OrderBy(x => x))}");
+    
+        if (TeamIds is not null && TeamIds.Count > 0)
+            keyParts.Add($"team_{string.Join(",", TeamIds.OrderBy(x => x))}");
+
+        return string.Join("_", keyParts);
+    }
+    
+    private bool IsDefaultView()
+    {
+        return FilterChecker.For(this)
+            .HasNoPositionFilter()
+            .HasNoTeamFilter()
+            .HasNoPlayerNameFilter()
+            .HasNoMinutesFilter()
+            .HasNoOrderBy()
+            .HasDefaultPage()
+            .IsMatch();
+    }
+
+    private bool HasOnlyPositionFilter()
+    {
+        return FilterChecker.For(this)
+            .HasPositionFilter()
+            .HasNoTeamFilter()
+            .HasNoPlayerNameFilter()
+            .HasNoMinutesFilter()
+            .HasNoOrderBy()
+            .HasDefaultPage()
+            .IsMatch();
+    }
+
+    private bool HasOnlyTeamFilter()
+    {
+        return FilterChecker.For(this)
+            .HasNoPositionFilter()
+            .HasTeamFilter()
+            .HasNoPlayerNameFilter()
+            .HasNoMinutesFilter()
+            .HasNoOrderBy()
+            .HasDefaultPage()
+            .IsMatch();
+    }
 }

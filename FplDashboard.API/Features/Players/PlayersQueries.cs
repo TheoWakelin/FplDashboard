@@ -5,7 +5,7 @@ using FplDashboard.API.Infrastructure;
 
 namespace FplDashboard.API.Features.Players;
 
-public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQueries generalQueries)
+public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQueries generalQueries, ICacheService cacheService)
 {
     private static readonly Dictionary<string, string> AllowedOrderColumns = new()
     {
@@ -40,6 +40,22 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
     public async Task<List<PlayerPagedDto>> GetPagedPlayersAsync(
         PlayerFilterRequest request,
         CancellationToken cancellationToken)
+    {
+        // Check if this filter combination should be cached, for uncommon filters, skip cache and query directly.
+        if (!request.ShouldCacheFilters()) return await FetchPlayersFromDatabase(request, cancellationToken);
+        
+        var cacheKey = request.GenerateCacheKey();
+        var cachedResult = cacheService.Get<List<PlayerPagedDto>>(cacheKey);
+            
+        if (cachedResult != null)
+            return cachedResult;
+
+        var result = await FetchPlayersFromDatabase(request, cancellationToken);
+        cacheService.Set(cacheKey, result);
+        return result;
+    }
+
+    private async Task<List<PlayerPagedDto>> FetchPlayersFromDatabase(PlayerFilterRequest request, CancellationToken cancellationToken)
     {
         var currentGameWeekId = await generalQueries.GetCurrentGameWeekIdAsync(cancellationToken);
         var sql = SqlResourceLoader.GetSql("FplDashboard.API.Features.Players.Sql.PlayersPaged.sql");

@@ -8,16 +8,14 @@ using Moq.Dapper;
 
 namespace FplDashboard.API.UnitTests.Features.Dashboard
 {
-    public class DashboardQueriesTests : BaseUnitTest
+    public class DashboardQueriesTests : QueriesUsingGeneralTestsBase
     {
         private readonly DashboardQueries _sut;
-        private readonly Mock<IGeneralQueries> _mockGeneralQueries;
         private readonly DashboardDataDto _cachedObject;
 
         public DashboardQueriesTests()
         {
-            _mockGeneralQueries = new Mock<IGeneralQueries>();
-            _sut = new DashboardQueries(MockConnectionFactory.Object, _mockGeneralQueries.Object, MockCacheService.Object);
+            _sut = new DashboardQueries(MockConnectionFactory.Object, MockGeneralQueries.Object, MockCacheService.Object);
             _cachedObject = new DashboardDataDto {
                 PlayerNews = [
                     new PlayerNewsDto {
@@ -50,7 +48,7 @@ namespace FplDashboard.API.UnitTests.Features.Dashboard
             MockDbConnection.SetupDapperAsync(c => c.QueryAsync<TeamStrengthDto>(It.IsAny<CommandDefinition>()))
                 .ReturnsAsync(_cachedObject.TopTeams.Concat(_cachedObject.BottomTeams));
                 
-            _mockGeneralQueries.Setup(m => m.GetCurrentGameWeekIdAsync(It.IsAny<CancellationToken>())).ReturnsAsync(2025);
+            MockGeneralQueries.Setup(m => m.GetCurrentGameWeekIdAsync(It.IsAny<CancellationToken>())).ReturnsAsync(2025);
 
             // Act
             var result = await _sut.GetDashboardDataAsync(CancellationToken.None);
@@ -66,7 +64,7 @@ namespace FplDashboard.API.UnitTests.Features.Dashboard
         {
             // Arrange
             MockCacheService.Setup(m => m.Get<DashboardDataDto>(CacheKeys.DashboardData)).Returns(_cachedObject);
-            _mockGeneralQueries.Setup(m => m.GetCurrentGameWeekIdAsync(It.IsAny<CancellationToken>())).ReturnsAsync(2025);
+            MockGeneralQueries.Setup(m => m.GetCurrentGameWeekIdAsync(It.IsAny<CancellationToken>())).ReturnsAsync(2025);
 
             // Act
             var result = await _sut.GetDashboardDataAsync(CancellationToken.None);

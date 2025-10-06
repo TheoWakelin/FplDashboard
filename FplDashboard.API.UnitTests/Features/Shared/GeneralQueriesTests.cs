@@ -6,7 +6,7 @@ using FplDashboard.API.UnitTests.Infrastructure;
 
 namespace FplDashboard.API.UnitTests.Features.Shared
 {
-    public class GeneralQueriesTests : BaseUnitTest
+    public class GeneralQueriesTests : QueriesTestBase
     {
         private readonly GeneralQueries _sut;
         private const int GameWeekId = 5;

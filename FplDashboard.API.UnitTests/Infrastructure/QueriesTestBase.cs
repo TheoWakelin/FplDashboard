@@ -5,13 +5,13 @@ using Moq;
 
 namespace FplDashboard.API.UnitTests.Infrastructure
 {
-    public abstract class BaseUnitTest
+    public abstract class QueriesTestBase
     {
         protected readonly Mock<IDbConnectionFactory> MockConnectionFactory;
         protected readonly Mock<ICacheService> MockCacheService;
         protected readonly Mock<IDbConnection> MockDbConnection;
 
-        protected BaseUnitTest()
+        protected QueriesTestBase()
         {
             MockConnectionFactory = new Mock<IDbConnectionFactory>();
             MockCacheService = new Mock<ICacheService>();

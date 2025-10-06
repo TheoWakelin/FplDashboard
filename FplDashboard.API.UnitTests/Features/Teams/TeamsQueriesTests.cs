@@ -8,14 +8,13 @@ using FplDashboard.API.UnitTests.Infrastructure;
 
 namespace FplDashboard.API.UnitTests.Features.Teams
 {
-    public class TeamsQueriesTests : BaseUnitTest
+    public class TeamsQueriesTests : QueriesUsingGeneralTestsBase
     {
         private readonly TeamsQueries _sut;
 
         public TeamsQueriesTests()
         {
-            var mockGeneralQueries = new Mock<IGeneralQueries>();
-            _sut = new TeamsQueries(MockConnectionFactory.Object, mockGeneralQueries.Object, MockCacheService.Object);
+            _sut = new TeamsQueries(MockConnectionFactory.Object, MockGeneralQueries.Object, MockCacheService.Object);
         }
 
         [Fact]
