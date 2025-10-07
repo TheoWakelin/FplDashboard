@@ -14,6 +14,6 @@ import { HumanizeDatePipe } from '../../shared/pipes/humanize-date.pipe';
   styleUrls: ['./player-news.component.scss']
 })
 export class PlayerNewsComponent {
-  @Input() playerNews: PlayerNews[] = [];
+  @Input() playerNews: readonly PlayerNews[] = [];
   displayedColumns: string[] = ['playerImage', 'playerName', 'teamName', 'news', 'newsAdded'];
 }

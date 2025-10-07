@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { ApiDataService } from '../../api-data.service';
+import { Component, EventEmitter, Output, OnInit, inject } from '@angular/core';
+import { ApiDataService } from '../../core/services/api-data.service';
 import { CommonModule } from '@angular/common';
 import { MultiSelectComponent } from '../../shared/multi-select/multi-select.component';
 import { POSITION_MAP } from '../../shared/pipes/position.pipe';
@@ -19,7 +19,9 @@ export interface PlayerFilterModel {
   styleUrls: ['./players-filters.component.scss']
 })
 export class PlayersFiltersComponent implements OnInit {
+  private readonly api = inject(ApiDataService);
   private lastEmittedFilter?: PlayerFilterModel;
+  
   @Output() filterChange = new EventEmitter<PlayerFilterModel>();
 
   teams: { id: number; name: string }[] = [];
@@ -29,8 +31,6 @@ export class PlayersFiltersComponent implements OnInit {
   selectedPositions: number[] = [];
   minMinutes: number | null = null;
   playerName: string = '';
-
-  constructor(private api: ApiDataService) {}
 
   ngOnInit(): void {
     this.api.getTeamsList().subscribe({

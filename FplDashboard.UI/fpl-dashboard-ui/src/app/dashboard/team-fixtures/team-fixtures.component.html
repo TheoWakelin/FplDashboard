@@ -4,7 +4,7 @@
       <h3 class="fixtures-title best">Best Fixtures</h3>
       <div class="top-teams-tiles">
         @for (team of topTeamFixtures; track team.teamName) {
-          <mat-card class="team-tile" (click)="goToTeams()" style="cursor:pointer;">
+          <mat-card class="team-tile clickable" (click)="goToTeams()">
             <div class="team-name">{{ team.teamName }}</div>
             <div class="team-score">Total Score: <strong>{{ team.cumulativeStrength }}</strong></div>
           </mat-card>
@@ -15,7 +15,7 @@
       <h3 class="fixtures-title worst">Worst Fixtures</h3>
       <div class="top-teams-tiles">
         @for (team of bottomTeamFixtures; track team.teamName) {
-          <mat-card class="team-tile" (click)="goToTeams()" style="cursor:pointer;">
+          <mat-card class="team-tile clickable" (click)="goToTeams()">
             <div class="team-name">{{ team.teamName }}</div>
             <div class="team-score">Total Score: <strong>{{ team.cumulativeStrength }}</strong></div>
           </mat-card>

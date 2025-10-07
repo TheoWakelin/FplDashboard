@@ -1,9 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 import { TeamFixturesDto, FixtureScoreDto } from './team-fixtures.model';
-import { ApiDataService } from '../api-data.service';
-import { OnInit } from '@angular/core';
+import { ApiDataService } from '../core/services/api-data.service';
 
 @Component({
   selector: 'app-teams',
@@ -13,12 +12,12 @@ import { OnInit } from '@angular/core';
   styleUrls: ['./teams.component.scss']
 })
 export class TeamsComponent implements OnInit, OnChanges {
+  private readonly api = inject(ApiDataService);
+
   public isLoading = true;
   public error: string | null = null;
   public teamFixtures: TeamFixturesDto[] = [];
   public gameWeeks: number[] = [];
-
-  constructor(private api: ApiDataService) {}
 
   ngOnInit(): void {
     this.isLoading = true;

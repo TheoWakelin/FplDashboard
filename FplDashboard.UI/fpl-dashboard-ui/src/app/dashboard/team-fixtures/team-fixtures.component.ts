@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -13,10 +13,10 @@ import { TeamFixturesDto } from '../dashboard-data.model';
   styleUrls: ['./team-fixtures.component.scss']
 })
 export class TeamFixturesComponent {
-  @Input() topTeamFixtures: TeamFixturesDto[] = [];
-  @Input() bottomTeamFixtures: TeamFixturesDto[] = [];
+  private readonly router = inject(Router);
 
-  constructor(private router: Router) {}
+  @Input() topTeamFixtures: readonly TeamFixturesDto[] = [];
+  @Input() bottomTeamFixtures: readonly TeamFixturesDto[] = [];
   
   goToTeams() {
     this.router.navigate(['/teams']);

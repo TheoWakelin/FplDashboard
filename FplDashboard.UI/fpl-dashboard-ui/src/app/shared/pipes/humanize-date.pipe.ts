@@ -6,8 +6,8 @@ import { formatDistanceToNow } from 'date-fns';
   standalone: true
 })
 export class HumanizeDatePipe implements PipeTransform {
-  transform(value: string | Date): string {
-    if (!value) return '';
+  transform(value: string | Date | null | undefined): string {
+    if (!value) return '—';
     return formatDistanceToNow(new Date(value), { addSuffix: true });
   }
 }

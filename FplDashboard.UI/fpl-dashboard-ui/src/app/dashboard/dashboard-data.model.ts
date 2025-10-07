@@ -1,17 +1,17 @@
 export interface PlayerNews {
-  PlayerName: string;
-  News: string;
-  NewsAdded: string;
-  TeamName: string;
+  readonly playerName: string;
+  readonly news: string;
+  readonly newsAdded: string;
+  readonly teamName: string;
 }
 
 export interface TeamFixturesDto {
-  teamName: string;
-  cumulativeStrength: number;
+  readonly teamName: string;
+  readonly cumulativeStrength: number;
 }
 
 export interface DashboardData {
-  playerNews: PlayerNews[];
-  topTeams: TeamFixturesDto[];
-  bottomTeams: TeamFixturesDto[];
+  readonly playerNews: readonly PlayerNews[];
+  readonly topTeams: readonly TeamFixturesDto[];
+  readonly bottomTeams: readonly TeamFixturesDto[];
 }

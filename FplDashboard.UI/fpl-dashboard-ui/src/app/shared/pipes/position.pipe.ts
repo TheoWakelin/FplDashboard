@@ -8,10 +8,12 @@ export const POSITION_MAP: { [id: number]: string } = {
 };
 
 @Pipe({
-  name: 'position'
+  name: 'position',
+  standalone: true
 })
 export class PositionPipe implements PipeTransform {
-  transform(value: number | string): string {
+  transform(value: number | string | null | undefined): string {
+    if (!value) return '';
     const id = typeof value === 'string' ? parseInt(value, 10) : value;
     return POSITION_MAP[id] || '';
   }

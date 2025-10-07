@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 
 import { DashboardData } from './dashboard-data.model';
 import { PlayerNewsComponent } from './player-news/player-news.component';
 import { TeamFixturesComponent } from './team-fixtures/team-fixtures.component';
-import { ApiDataService } from '../api-data.service';
+import { ApiDataService } from '../core/services/api-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,11 +15,11 @@ import { ApiDataService } from '../api-data.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  private readonly dashboardApi = inject(ApiDataService);
+
   dashboardData: DashboardData | null = null;
   isLoading = true;
   error: string | null = null;
-
-  constructor(private dashboardApi: ApiDataService) { }
 
   ngOnInit(): void {
     this.loadDashboardData();

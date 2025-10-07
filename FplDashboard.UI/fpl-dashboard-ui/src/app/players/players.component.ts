@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 import { CostPipe } from '../shared/pipes/cost.pipe';
 import { PositionPipe } from '../shared/pipes/position.pipe';
 import { OrderableTableComponent, TableHeader } from '../shared/orderable-table/orderable-table.component';
 import { PlayersFiltersComponent, PlayerFilterModel } from './filters/players-filters.component';
+import { PAGINATION } from '../shared/constants';
 
-import { ApiDataService } from '../api-data.service';
+import { ApiDataService } from '../core/services/api-data.service';
 import { PlayerPagedDto } from './player-paged.model';
 
 @Component({
@@ -17,10 +18,12 @@ import { PlayerPagedDto } from './player-paged.model';
   styleUrls: ['./players.component.scss']
 })
 export class PlayersComponent {
+  private readonly api = inject(ApiDataService);
+
   players: PlayerPagedDto[] = [];
   loading = true;
   page = 1;
-  pageSize = 20;
+  pageSize = PAGINATION.DEFAULT_PAGE_SIZE;
 
   orderBy: string = '';
   orderDir: '' | 'asc' | 'desc' = '';
@@ -55,10 +58,6 @@ export class PlayersComponent {
     { key: 'Threat', label: 'Threat', sortable: true },
     { key: 'IctIndex', label: 'ICT Index', sortable: true }
   ];
-
-  constructor(private api: ApiDataService) {}
-
-  // No need to fetch teams here
 
   fetchPlayers() {
     this.loading = true;
