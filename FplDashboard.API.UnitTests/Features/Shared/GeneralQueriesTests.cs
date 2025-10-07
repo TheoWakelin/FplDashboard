@@ -27,7 +27,7 @@ namespace FplDashboard.API.UnitTests.Features.Shared
 
             // Assert
             Assert.Equal(GameWeekId, result);
-            MockConnectionFactory.Verify(m => m.CreateConnection(), Times.Never);
+            VerifyConnectionNotCreated();
         }
 
         [Fact]
@@ -42,8 +42,8 @@ namespace FplDashboard.API.UnitTests.Features.Shared
 
             // Assert
             Assert.Equal(GameWeekId, result);
-            MockConnectionFactory.Verify(m => m.CreateConnection(), Times.Once);
-            MockCacheService.Verify(m => m.Set(CacheKeys.CurrentGameWeekId, It.IsAny<int>()), Times.Once);
+            VerifyConnectionCreated();
+            VerifyCacheSet<int>(CacheKeys.CurrentGameWeekId);
         }
     }
 }

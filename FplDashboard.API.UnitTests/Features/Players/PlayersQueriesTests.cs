@@ -28,8 +28,9 @@ public class PlayersQueriesTests : QueriesUsingGeneralTestsBase
         // Act
         await _sut.GetPagedPlayersAsync(filters, CancellationToken.None);
 
-        // Assert - Should cache popular combination
-        MockCacheService.Verify(m => m.Set(It.IsAny<string>(), It.IsAny<IEnumerable<PlayerPagedDto>>()), Times.Once);
+        // Assert
+        var cacheKey = filters.GenerateCacheKey();
+        VerifyCacheSet<IEnumerable<PlayerPagedDto>>(cacheKey);
     }
 
     [Fact]
@@ -47,7 +48,7 @@ public class PlayersQueriesTests : QueriesUsingGeneralTestsBase
 
         // Assert
         Assert.Equal(cachedPlayers, result);
-        MockCacheService.Verify(m => m.Set(It.IsAny<string>(), It.IsAny<IEnumerable<PlayerPagedDto>>()), Times.Never);
+        VerifyCacheNotSet<IEnumerable<PlayerPagedDto>>(It.IsAny<string>());
     }
 
     [Fact]
@@ -67,18 +68,52 @@ public class PlayersQueriesTests : QueriesUsingGeneralTestsBase
         await _sut.GetPagedPlayersAsync(complexFilters, CancellationToken.None);
 
         // Assert - Should not cache complex combination
-        MockCacheService.Verify(m => m.Set(It.IsAny<string>(), It.IsAny<PlayerPagedDto>()), Times.Never);
+        VerifyCacheNotSet<PlayerPagedDto>(It.IsAny<string>());
     }
 
-    public static IEnumerable<object[]> CacheableFilterTestData =>
-        new List<object[]>
-        {
-            new object[] { new PlayerFilterRequest() },
-            new object[] { new PlayerFilterRequest { TeamIds = [1] } },
-            new object[] { new PlayerFilterRequest { TeamIds = [1, 2] } },
-            new object[] { new PlayerFilterRequest { PositionIds = [(int)Position.Forward] } },
-            new object[] { new PlayerFilterRequest { PositionIds = [(int)Position.Forward, (int)Position.Midfielder] } }
-        };
+    [Fact]
+    public async Task GetAllTeamsAsync_ReturnsCachedData_WhenCacheHit()
+    {
+        // Arrange
+        var cachedTeams = new List<TeamListDto> { new() { Id = 1, Name = "TeamA" } };
+        MockCacheService.Setup(m => m.Get<List<TeamListDto>>(CacheKeys.PlayerTeams)).Returns(cachedTeams);
+
+        // Act
+        var result = await _sut.GetAllTeamsAsync(CancellationToken.None);
+
+        // Assert
+        Assert.Equal(cachedTeams, result);
+        VerifyConnectionNotCreated();
+        VerifyCacheNotSet<List<TeamListDto>>(CacheKeys.PlayerTeams);
+    }
+
+    [Fact]
+    public async Task GetAllTeamsAsync_QueriesDatabaseAndCaches_WhenCacheMiss()
+    {
+        // Arrange
+        MockCacheService.Setup(m => m.Get<List<TeamListDto>>(CacheKeys.PlayerTeams)).Returns((List<TeamListDto>?)null);
+        var dbTeams = new List<TeamListDto> { new() { Id = 2, Name = "TeamB" } };
+        MockDbConnection.SetupDapperAsync(c => c.QueryAsync<TeamListDto>(It.IsAny<CommandDefinition>())).ReturnsAsync(dbTeams);
+
+        // Act
+        var result = await _sut.GetAllTeamsAsync(CancellationToken.None);
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal(dbTeams[0].Id, result[0].Id);
+        Assert.Equal(dbTeams[0].Name, result[0].Name);
+        VerifyCacheSet<List<TeamListDto>>(CacheKeys.PlayerTeams);
+        VerifyConnectionCreated();
+    }
+
+    public static TheoryData<PlayerFilterRequest> CacheableFilterTestData => new()
+    {
+        new PlayerFilterRequest(),
+        new PlayerFilterRequest { TeamIds = [1] },
+        new PlayerFilterRequest { TeamIds = [1, 2] },
+        new PlayerFilterRequest { PositionIds = [(int)Position.Forward] },
+        new PlayerFilterRequest { PositionIds = [(int)Position.Forward, (int)Position.Midfielder] }
+    };
 
     private List<PlayerPagedDto> CreateTestPlayers()
     {

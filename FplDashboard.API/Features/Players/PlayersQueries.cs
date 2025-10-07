@@ -104,10 +104,15 @@ public class PlayersQueries(IDbConnectionFactory connectionFactory, IGeneralQuer
 
     public async Task<List<TeamListDto>> GetAllTeamsAsync(CancellationToken cancellationToken)
     {
+        if (cacheService.Get<List<TeamListDto>>(CacheKeys.PlayerTeams) is { } cachedTeams)
+            return cachedTeams;
+
         const string sql = "SELECT Id, Name FROM Teams ORDER BY Name";
         var teams = await connectionFactory.CreateConnection().QueryAsync<TeamListDto>(
             new CommandDefinition(sql, cancellationToken: cancellationToken)
         );
-        return teams.ToList();
+        var teamList = teams.ToList();
+        cacheService.Set(CacheKeys.PlayerTeams, teamList);
+        return teamList;
     }
 }

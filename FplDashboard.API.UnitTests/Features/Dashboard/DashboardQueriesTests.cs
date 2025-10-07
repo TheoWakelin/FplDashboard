@@ -40,11 +40,9 @@ namespace FplDashboard.API.UnitTests.Features.Dashboard
             // Arrange
             MockCacheService.Setup(m => m.Get<DashboardDataDto>(CacheKeys.DashboardData)).Returns((DashboardDataDto?)null);
             
-            // Set up the player news query
             MockDbConnection.SetupDapperAsync(c => c.QueryAsync<PlayerNewsDto>(It.IsAny<CommandDefinition>()))
                 .ReturnsAsync(_cachedObject.PlayerNews);
 
-            // Set up the team strength query
             MockDbConnection.SetupDapperAsync(c => c.QueryAsync<TeamStrengthDto>(It.IsAny<CommandDefinition>()))
                 .ReturnsAsync(_cachedObject.TopTeams.Concat(_cachedObject.BottomTeams));
                 
@@ -54,7 +52,7 @@ namespace FplDashboard.API.UnitTests.Features.Dashboard
             var result = await _sut.GetDashboardDataAsync(CancellationToken.None);
 
             // Assert
-            MockCacheService.Verify(m => m.Set(CacheKeys.DashboardData, It.IsAny<DashboardDataDto>()), Times.Once);
+            VerifyCacheSet<DashboardDataDto>(CacheKeys.DashboardData);
             Assert.Equivalent(_cachedObject.TopTeams, result.TopTeams);
             Assert.Equivalent(_cachedObject.BottomTeams, result.BottomTeams);
         }
@@ -71,7 +69,7 @@ namespace FplDashboard.API.UnitTests.Features.Dashboard
 
             // Assert
             Assert.Equal(_cachedObject, result);
-            MockCacheService.Verify(m => m.Set(It.IsAny<string>(), It.IsAny<DashboardDataDto>()), Times.Never);
+            VerifyCacheNotSet<DashboardDataDto>(CacheKeys.DashboardData);
         }
     }
 }

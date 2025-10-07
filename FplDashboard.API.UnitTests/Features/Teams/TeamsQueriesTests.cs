@@ -29,7 +29,7 @@ namespace FplDashboard.API.UnitTests.Features.Teams
 
             // Assert
             Assert.Equal(cachedFixtures, result);
-            MockConnectionFactory.Verify(m => m.CreateConnection(), Times.Never);
+            VerifyConnectionNotCreated();
         }
 
         [Fact]
@@ -44,8 +44,8 @@ namespace FplDashboard.API.UnitTests.Features.Teams
             await _sut.GetTeamFixturesAsync(CancellationToken.None);
 
             // Assert
-            MockConnectionFactory.Verify(m => m.CreateConnection(), Times.Once);
-            MockCacheService.Verify(m => m.Set(CacheKeys.TeamFixtures, It.IsAny<List<TeamFixturesDto>>()), Times.Once);
+            VerifyConnectionCreated();
+            VerifyCacheSet<List<TeamFixturesDto>>(CacheKeys.TeamFixtures);
         }
     }
 }
