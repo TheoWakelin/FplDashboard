@@ -4,7 +4,7 @@ namespace FplDashboard.API.IntegrationTests.Infrastructure;
 public abstract class BaseIntegrationTest : IClassFixture<DatabaseFixture>, IAsyncDisposable
 {
     protected readonly DatabaseFixture Fixture;
-    protected ApiTestClient ApiClient => new(_client);
+    protected readonly ApiTestClient ApiClient;
     private readonly HttpClient _client;
     private readonly TestWebApplicationFactory _factory;
 
@@ -13,6 +13,7 @@ public abstract class BaseIntegrationTest : IClassFixture<DatabaseFixture>, IAsy
         Fixture = fixture;
         _factory = new TestWebApplicationFactory(fixture.ConnectionString);
         _client = _factory.CreateClient();
+        ApiClient = new ApiTestClient(_client);
     }
 
     public async ValueTask DisposeAsync()
