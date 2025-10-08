@@ -52,3 +52,5 @@ Code should be concise, maintainable, and follow Angular best practices. It shou
 If anything changes in the project structure or conventions, please update this document accordingly.
 
 When making suggestions ensure you have verified the suggestion exists and follows best practices, this should be done by checking online. 
+
+When installing packages, ensure you are using the latest stable versions that is compatibale with the other packages in the project.

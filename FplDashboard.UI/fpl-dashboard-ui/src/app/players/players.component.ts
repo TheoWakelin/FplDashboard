@@ -1,14 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 import { CostPipe } from '../shared/pipes/cost.pipe';
 import { PositionPipe } from '../shared/pipes/position.pipe';
 import { OrderableTableComponent, TableHeader } from '../shared/orderable-table/orderable-table.component';
 import { PlayersFiltersComponent, PlayerFilterModel } from './filters/players-filters.component';
 import { PAGINATION } from '../shared/constants';
-
 import { ApiDataService } from '../core/services/api-data.service';
 import { PlayerPagedDto } from './player-paged.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-players',
@@ -71,8 +70,9 @@ export class PlayersComponent {
     this.api.getPagedPlayers(request).subscribe({
       next: (players) => {
         this.players = players;
+        this.loading = false;
       },
-      complete: () => {
+      error: () => {
         this.loading = false;
       }
     });
