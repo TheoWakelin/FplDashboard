@@ -1,12 +1,31 @@
+using System.Text.Json;
 using FplDashboard.DataModel;
 using FplDashboard.ETL.Models;
 using Microsoft.EntityFrameworkCore;
 using Fixture = FplDashboard.DataModel.Models.Fixture;
+using FixtureFromEtl = FplDashboard.ETL.Models.Fixture;
 
 namespace FplDashboard.ETL.Services;
 
 public class FixtureSyncService(FplDashboardDbContext database)
 {
+    public async Task MapFixturesFromApiAndAddToDatabase(string fixturesResponse, RelevantGameWeeks relevantGameWeeks, CancellationToken stoppingToken)
+    {
+        var fixturesEtl = JsonSerializer.Deserialize<List<FixtureFromEtl>>(fixturesResponse);
+        if (fixturesEtl == null) return;
+        
+        // Build lookup from GameWeekNumber to Id.
+        var gameWeekLookup = await database.GameWeeks.ToDictionaryAsync(gw => gw.GameWeekNumber, gw => gw.Id, cancellationToken: stoppingToken);
+        
+        var fixtures = fixturesEtl
+            .Where(f => gameWeekLookup.ContainsKey(f.GameweekId))
+            .Select(f => f.ToDataModelFixture(gameWeekLookup[f.GameweekId]))
+            .ToList();
+        
+        await SyncAsync(fixtures, relevantGameWeeks, stoppingToken);
+        await database.SaveChangesAsync(stoppingToken);
+    }
+    
     public async Task SyncAsync(List<Fixture> fixtures, RelevantGameWeeks gameWeeks, CancellationToken cancellationToken)
     {
         // Check if last fixture for the season exists

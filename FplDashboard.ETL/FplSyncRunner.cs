@@ -25,7 +25,8 @@ public class FplSyncRunner(
     PlayerNewsSyncService playerNewsSync,
     FixtureSyncService fixtureSync)
 {
-    private readonly int _finalGameWeekNumber = 38;
+    private const int FinalGameWeekNumber = 38;
+
     public async Task RunSyncAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Fetching FPL data at: {time}", DateTimeOffset.Now);
@@ -63,9 +64,7 @@ public class FplSyncRunner(
             
             if (!string.IsNullOrWhiteSpace(fixturesDataTask.Result))
             {
-                var fixtures = await MapFixturesFromApiResponse(fixturesDataTask.Result);
-                await fixtureSync.SyncAsync(fixtures, relevantGameWeeks, stoppingToken);
-                await database.SaveChangesAsync(stoppingToken);
+                await fixtureSync.MapFixturesFromApiAndAddToDatabase(fixturesDataTask.Result, relevantGameWeeks, stoppingToken);
             }
             
             await transaction.CommitAsync(stoppingToken);
@@ -77,24 +76,6 @@ public class FplSyncRunner(
         }
     }
     
-    private async Task<List<FixtureInDb>> MapFixturesFromApiResponse(string fixturesResponse)
-    {
-        var fixturesEtl = JsonSerializer.Deserialize<List<Fixture>>(fixturesResponse);
-        if (fixturesEtl == null) return [];
-        
-        // Build lookup from GameWeekNumber to Id
-        var gameWeekLookup = await database.GameWeeks.ToDictionaryAsync(gw => gw.GameWeekNumber, gw => gw.Id);
-        
-        var mappedFixtures = new List<FixtureInDb>();
-        foreach (var f in fixturesEtl)
-        {
-            if (!gameWeekLookup.TryGetValue(f.GameweekId, out var dbGameWeekId)) continue;
-            var dbFixture = f.ToDataModelFixture(dbGameWeekId);
-            mappedFixtures.Add(dbFixture);
-        }
-        return mappedFixtures;
-    }
-    
     private async Task<RelevantGameWeeks> GetRelevantGameWeekIds(WrapperFromApi data)
     {
         var currentGameWeekNumber = data.Events.GetCurrentGameWeekNumber();
@@ -102,15 +83,13 @@ public class FplSyncRunner(
         var gameWeeks = await database.GameWeeks
             .Where(gw => gw.GameWeekNumber == currentGameWeekNumber 
                          || gw.GameWeekNumber == previousGameWeekNumber
-                         || gw.GameWeekNumber == _finalGameWeekNumber)
+                         || gw.GameWeekNumber == FinalGameWeekNumber)
             .Where(gw => gw.YearSeasonStarted == YearHelpers.GetYearCurrentSeasonStarted())
             .ToArrayAsync();
         
         return new RelevantGameWeeks(
-            GetIdOrDefault(gameWeeks, currentGameWeekNumber),
-            GetIdOrDefault(gameWeeks, previousGameWeekNumber),
-            GetIdOrDefault(gameWeeks, _finalGameWeekNumber));
+            gameWeeks.GetIdOrDefault(currentGameWeekNumber),
+            gameWeeks.GetIdOrDefault(previousGameWeekNumber),
+            gameWeeks.GetIdOrDefault(FinalGameWeekNumber));
     }
-
-    private static int GetIdOrDefault(GameWeek[] gameWeek, int gameWeekNumber) => gameWeek.FirstOrDefault(gw => gw.GameWeekNumber == gameWeekNumber)?.Id ?? gameWeekNumber;
 }
