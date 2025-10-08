@@ -29,16 +29,26 @@ public abstract class FplSyncRunnerTestBase : IDisposable
             Database,
             new TeamSyncService(Database),
             new GameWeekSyncService(Database),
-            new Services.PlayerSyncService(Database),
+            new PlayerSyncService(Database),
             new TeamGameWeekSyncService(Database),
             new PlayerGameWeekSyncService(Database),
             new PlayerNewsSyncService(Database),
             new FixtureSyncService(Database)
         );
+        ClearDatabase();
     }
 
-    public void Dispose()
+    private void ClearDatabase()
     {
-        Database.Dispose();
+        Database.Players.RemoveRange(Database.Players);
+        Database.Teams.RemoveRange(Database.Teams);
+        Database.GameWeeks.RemoveRange(Database.GameWeeks);
+        Database.PlayerGameWeekData.RemoveRange(Database.PlayerGameWeekData);
+        Database.TeamGameWeekData.RemoveRange(Database.TeamGameWeekData);
+        Database.PlayerNews.RemoveRange(Database.PlayerNews);
+        Database.Fixtures.RemoveRange(Database.Fixtures);
+        Database.SaveChanges();
     }
+
+    public void Dispose() => Database.Dispose();
 }

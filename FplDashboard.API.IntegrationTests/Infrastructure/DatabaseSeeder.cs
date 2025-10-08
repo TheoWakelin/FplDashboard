@@ -9,6 +9,10 @@ namespace FplDashboard.API.IntegrationTests.Infrastructure;
 
 public class DatabaseSeeder(FplDashboardDbContext dbContext, Fixture fixture)
 {
+    private const int FirstFutureGameWeekNumber = 2;
+    private const int LastFutureGameWeekNumber = 6;
+    private const int PlayerNewsCount = 2;
+
     public async Task<DashboardSeededData> SeedAllTestDataAsync()
     {
         var seededTeams = await SeedTeamsAsync();
@@ -16,19 +20,11 @@ public class DatabaseSeeder(FplDashboardDbContext dbContext, Fixture fixture)
         var futureGameWeeks = await SeedFutureGameWeeksAsync();
         var seededPlayers = await SeedPlayersAsync(seededTeams[0].Id);
 
-        // Prepare all entities to add
-        var playerGameWeekData = GetPlayerGameWeekData(seededPlayers, seededGameWeek.Id);
-        var teamGameWeekData = GetTeamGameWeekData(seededTeams, seededGameWeek.Id);
-        var fixtures = GetFixtures(seededTeams, futureGameWeeks);
-        var playerNews = GetPlayerNews(seededPlayers);
-
-        // Add all entities to context
-        await Task.WhenAll(
-            dbContext.PlayerGameWeekData.AddRangeAsync(playerGameWeekData),
-            dbContext.TeamGameWeekData.AddRangeAsync(teamGameWeekData),
-            dbContext.Fixtures.AddRangeAsync(fixtures),
-            dbContext.PlayerNews.AddRangeAsync(playerNews)
-        );
+        await GetPlayerGameWeekData(seededPlayers, seededGameWeek.Id);
+        var teamGameWeekData = await GetTeamGameWeekData(seededTeams, seededGameWeek.Id);
+        var fixtures = await GetFixtures(seededTeams, futureGameWeeks);
+        var playerNews = await GetPlayerNews(seededPlayers);
+        
         await dbContext.SaveChangesAsync();
 
         return new DashboardSeededData
@@ -67,7 +63,7 @@ public class DatabaseSeeder(FplDashboardDbContext dbContext, Fixture fixture)
     private async Task<List<GameWeek>> SeedFutureGameWeeksAsync()
     {
         var futureGameWeeks = new List<GameWeek>();
-        for (var i = 2; i <= 6; i++)
+        for (var i = FirstFutureGameWeekNumber; i <= LastFutureGameWeekNumber; i++)
         {
             var gw = fixture.Build<GameWeek>()
                 .With(gw => gw.GameWeekNumber, i)
@@ -90,19 +86,22 @@ public class DatabaseSeeder(FplDashboardDbContext dbContext, Fixture fixture)
         return players;
     }
 
-    private IEnumerable<PlayerGameWeekData> GetPlayerGameWeekData(List<Player> players, int gameWeekId)
+    private async Task<List<PlayerGameWeekData>> GetPlayerGameWeekData(List<Player> players, int gameWeekId)
     {
-        return players.Select(player => fixture.Build<PlayerGameWeekData>()
+        var playerData = players.Select(player => fixture.Build<PlayerGameWeekData>()
             .With(pg => pg.PlayerId, player.Id)
             .With(pg => pg.GameWeekId, gameWeekId)
             .Without(pg => pg.GameWeek)
             .Without(pg => pg.Player)
-            .Create());
+            .Create()).ToList();
+        
+        await dbContext.PlayerGameWeekData.AddRangeAsync(playerData);
+        return playerData;
     }
 
-    private List<TeamGameWeekData> GetTeamGameWeekData(List<Team> allTeams, int gameWeekId)
+    private async Task<List<TeamGameWeekData>> GetTeamGameWeekData(List<Team> allTeams, int gameWeekId)
     {
-        return allTeams.Select(team => {
+        var teamGameWeekData = allTeams.Select(team => {
             var strengths = TestConfiguration.TestData.SeededTeamStrengths
                 .FirstOrDefault(s => s.TeamName == team.Name);
             return fixture.Build<TeamGameWeekData>()
@@ -116,9 +115,12 @@ public class DatabaseSeeder(FplDashboardDbContext dbContext, Fixture fixture)
                 .Without(tgd => tgd.GameWeek)
                 .Create();
         }).ToList();
+
+        await dbContext.TeamGameWeekData.AddRangeAsync(teamGameWeekData);
+        return teamGameWeekData;
     }
 
-    private static List<DomainFixture> GetFixtures(List<Team> allTeams, List<GameWeek> futureGameWeeks)
+    private async Task<List<DomainFixture>> GetFixtures(List<Team> allTeams, List<GameWeek> futureGameWeeks)
     {
         var fixtures = new List<DomainFixture>();
         var random = new Random();
@@ -139,12 +141,15 @@ public class DatabaseSeeder(FplDashboardDbContext dbContext, Fixture fixture)
                 fixtures.Add(fixtureEntity);
             }
         }
+
+        await dbContext.Fixtures.AddRangeAsync(fixtures);
+        
         return fixtures;
     }
 
-    private List<PlayerNews> GetPlayerNews(List<Player> players)
+    private async Task<List<PlayerNews>> GetPlayerNews(List<Player> players)
     {
-        return players.Take(2)
+        var playerNews = players.Take(PlayerNewsCount)
             .Select(player => fixture.Build<PlayerNews>()
                 .With(pn => pn.PlayerId, player.Id)
                 .With(pn => pn.News, $"Test news for {player.WebName}")
@@ -152,5 +157,9 @@ public class DatabaseSeeder(FplDashboardDbContext dbContext, Fixture fixture)
                 .Without(pn => pn.Player)
                 .Create())
             .ToList();
+        
+        await dbContext.PlayerNews.AddRangeAsync(playerNews);
+        
+        return playerNews;
     }
 }
