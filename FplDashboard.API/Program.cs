@@ -44,7 +44,19 @@ public class Program
 
     private static void Configure(WebApplication app)
     {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/error");
+        }
+
         app.UseCors("AllowAngularDev");
         app.MapControllers();
+
+        // Minimal error endpoint for global exception handling
+        app.Map("/error", (HttpContext _) => Results.Problem("An unexpected error occurred."));
     }
 }
