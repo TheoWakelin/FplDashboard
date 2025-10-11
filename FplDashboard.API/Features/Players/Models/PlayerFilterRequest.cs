@@ -49,10 +49,12 @@ public class PlayerFilterRequest
     
     public bool ShouldCacheFilters()
     {
-        return IsDefaultView() ||
+        return IsStandardPage() && (IsDefaultView() ||
                HasOnlyPositionFilter() ||
-               HasOnlyTeamFilter();  
+               HasOnlyTeamFilter());  
     }
+    
+    private bool IsStandardPage() => Page == 1 && PageSize == 20;
 
     public string GenerateCacheKey()
     {

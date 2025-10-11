@@ -23,7 +23,7 @@ public class PlayersQueriesTests : QueriesUsingGeneralTestsBase
     public async Task GetPlayersAsync_CachesOnlySelectiveFilters(PlayerFilterRequest filters)
     {
         // Arrange
-        var players = CreateTestPlayers();
+        CreateTestPlayers();
 
         // Act
         await _sut.GetPagedPlayersAsync(filters, CancellationToken.None);
@@ -91,7 +91,6 @@ public class PlayersQueriesTests : QueriesUsingGeneralTestsBase
     public async Task GetAllTeamsAsync_QueriesDatabaseAndCaches_WhenCacheMiss()
     {
         // Arrange
-        MockCacheService.Setup(m => m.Get<List<TeamListDto>>(CacheKeys.PlayerTeams)).Returns((List<TeamListDto>?)null);
         var dbTeams = new List<TeamListDto> { new() { Id = 2, Name = "TeamB" } };
         MockDbConnection.SetupDapperAsync(c => c.QueryAsync<TeamListDto>(It.IsAny<CommandDefinition>())).ReturnsAsync(dbTeams);
 
@@ -104,6 +103,38 @@ public class PlayersQueriesTests : QueriesUsingGeneralTestsBase
         Assert.Equal(dbTeams[0].Name, result[0].Name);
         VerifyCacheSet<List<TeamListDto>>(CacheKeys.PlayerTeams);
         VerifyConnectionCreated();
+    }
+
+    [Fact]
+    public async Task GetPlayersAsync_DoesNotCache_SecondPage()
+    {
+        // Arrange
+        var filters = new PlayerFilterRequest { Page = 2 };
+        CreateTestPlayers();
+
+        // Act
+        await _sut.GetPagedPlayersAsync(filters, CancellationToken.None);
+
+        // Assert
+        var cacheKey = filters.GenerateCacheKey();
+        VerifyConnectionCreated();
+        VerifyCacheNotSet<IEnumerable<PlayerPagedDto>>(cacheKey);
+    }
+
+    [Fact]
+    public async Task GetPlayersAsync_Caches_CorrectPageSize()
+    {
+        // Arrange
+        var filters = new PlayerFilterRequest { Page = 1, PageSize = 5 };
+        CreateTestPlayers();
+
+        // Act
+        await _sut.GetPagedPlayersAsync(filters, CancellationToken.None);
+
+        // Assert
+        var cacheKey = filters.GenerateCacheKey();
+        VerifyConnectionCreated();
+        VerifyCacheNotSet<IEnumerable<PlayerPagedDto>>(cacheKey);
     }
 
     public static TheoryData<PlayerFilterRequest> CacheableFilterTestData => new()
