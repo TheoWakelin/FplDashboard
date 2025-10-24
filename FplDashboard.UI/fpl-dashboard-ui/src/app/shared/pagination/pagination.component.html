@@ -1,0 +1,47 @@
+<div class="pagination" role="navigation" aria-label="Pagination">
+  <button 
+    class="page-btn prev-btn" 
+    (click)="prevPage()" 
+    [disabled]="currentPage === 1 || disabled"
+    [attr.aria-label]="'Go to previous page'">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+  
+  @if (pageNumbers[0] > 1) {
+    <button class="page-btn" (click)="goToPage(1)" [disabled]="disabled" [attr.aria-label]="'Go to page 1'">1</button>
+    @if (pageNumbers[0] > 2) {
+      <span class="ellipsis">...</span>
+    }
+  }
+  
+  @for (pageNum of pageNumbers; track pageNum) {
+    <button 
+      class="page-btn" 
+      [class.active]="pageNum === currentPage"
+      (click)="goToPage(pageNum)"
+      [disabled]="disabled"
+      [attr.aria-label]="'Go to page ' + pageNum"
+      [attr.aria-current]="pageNum === currentPage ? 'page' : null">
+      {{ pageNum }}
+    </button>
+  }
+  
+  @if (pageNumbers[pageNumbers.length - 1] < totalPages) {
+    @if (pageNumbers[pageNumbers.length - 1] < totalPages - 1) {
+      <span class="ellipsis">...</span>
+    }
+    <button class="page-btn" (click)="goToPage(totalPages)" [disabled]="disabled" [attr.aria-label]="'Go to page ' + totalPages">{{ totalPages }}</button>
+  }
+  
+  <button 
+    class="page-btn next-btn" 
+    (click)="nextPage()" 
+    [disabled]="currentPage >= totalPages || disabled"
+    [attr.aria-label]="'Go to next page'">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+</div>

@@ -4,7 +4,7 @@
     <span class="arrow">&#9662;</span>
   </button>
   @if (open) {
-    <div class="dropdown">
+    <div class="dropdown" #dropdownDiv [ngStyle]="dropdownStyle">
       <div class="dropdown-list">
         <label *ngFor="let item of items">
           <input type="checkbox"

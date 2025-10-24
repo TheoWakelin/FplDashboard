@@ -8,6 +8,7 @@ export interface TableHeader {
   sortable?: boolean;
   sticky?: boolean;
   cssClass?: string;
+  visible?: boolean;
 }
 
 @Component({

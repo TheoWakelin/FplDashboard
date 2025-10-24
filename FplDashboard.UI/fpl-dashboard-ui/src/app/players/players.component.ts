@@ -1,76 +1,63 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ElementRef } from '@angular/core';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 import { CostPipe } from '../shared/pipes/cost.pipe';
 import { PositionPipe } from '../shared/pipes/position.pipe';
-import { OrderableTableComponent, TableHeader } from '../shared/orderable-table/orderable-table.component';
+import { OrderableTableComponent } from '../shared/orderable-table/orderable-table.component';
 import { PlayersFiltersComponent, PlayerFilterModel } from './filters/players-filters.component';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { PAGINATION } from '../shared/constants';
 import { ApiDataService } from '../core/services/api-data.service';
 import { PlayerPagedDto } from './player-paged.model';
+import { PlayerColumnsService } from './player-columns.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-players',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, CostPipe, OrderableTableComponent, PositionPipe, PlayersFiltersComponent],
+  imports: [CommonModule, LoadingSpinnerComponent, CostPipe, OrderableTableComponent, PositionPipe, PlayersFiltersComponent, PaginationComponent],
   templateUrl: './players.component.html',
   styleUrls: ['./players.component.scss']
 })
 export class PlayersComponent {
   private readonly api = inject(ApiDataService);
+  private readonly elRef = inject(ElementRef);
+  readonly columnsService = inject(PlayerColumnsService);
 
   players: PlayerPagedDto[] = [];
   loading = true;
   page = 1;
   pageSize = PAGINATION.DEFAULT_PAGE_SIZE;
+  totalPages = 1;
+  showColumnToggle = false;
+  columnDropdownStyle: any = {};
 
   orderBy: string = '';
   orderDir: '' | 'asc' | 'desc' = '';
 
   filterModel: PlayerFilterModel = {};
 
-  tableHeaders: TableHeader[] = [
-    { key: 'PlayerName', label: 'Player Name', sticky: true, sortable: true },
-    { key: 'TeamName', label: 'Team Name', sticky: true, cssClass: 'second', sortable: true },
-    { key: 'Position', label: 'Position', sortable: true },
-    { key: 'Cost', label: 'Cost', sortable: true },
-    { key: 'Bonus', label: 'Bonus', sortable: true },
-    { key: 'TotalPoints', label: 'Total Points', sortable: true },
-    { key: 'Minutes', label: 'Minutes', sortable: true },
-    { key: 'Goals', label: 'Goals', sortable: true },
-    { key: 'Assists', label: 'Assists', sortable: true },
-    { key: 'CleanSheets', label: 'Clean Sheets', sortable: true },
-    { key: 'PointsPerGame', label: 'Points/Game', sortable: true },
-    { key: 'Form', label: 'Form', sortable: true },
-    { key: 'ExpectedAssistsPer90', label: 'xA/90', sortable: true },
-    { key: 'ExpectedGoalInvolvementsPer90', label: 'xGI/90', sortable: true },
-    { key: 'ExpectedGoalsPer90', label: 'xG/90', sortable: true },
-    { key: 'ExpectedGoalsConcededPer90', label: 'xGC/90', sortable: true },
-    { key: 'DefensiveContributionPer90', label: 'Def. Contrib/90', sortable: true },
-    { key: 'SavesPer90', label: 'Saves/90', sortable: true },
-    { key: 'SelectedByPercent', label: 'Selected %', sortable: true },
-    { key: 'ValueSeason', label: 'Value Season', sortable: true },
-    { key: 'ValueForm', label: 'Value Form', sortable: true },
-    { key: 'Bps', label: 'BPS', sortable: true },
-    { key: 'Influence', label: 'Influence', sortable: true },
-    { key: 'Creativity', label: 'Creativity', sortable: true },
-    { key: 'Threat', label: 'Threat', sortable: true },
-    { key: 'IctIndex', label: 'ICT Index', sortable: true }
-  ];
 
   fetchPlayers() {
     this.loading = true;
     const request = {
       page: this.page,
       pageSize: this.pageSize,
-      orderBy: this.orderBy,
-      orderDir: this.orderDir,
+      ...(this.orderBy && { orderBy: this.orderBy }),
+      ...(this.orderDir && { orderDir: this.orderDir }),
       ...this.filterModel
     };
     this.api.getPagedPlayers(request).subscribe({
       next: (players) => {
         this.players = players;
         this.loading = false;
+        
+        // Dynamically calculate if there are more pages
+        // If we get a full page, assume there might be more
+        if (players.length === this.pageSize) {
+          this.totalPages = this.page + 1; // At least one more page
+        } else {
+          this.totalPages = this.page; // This is the last page
+        }
       },
       error: () => {
         this.loading = false;
@@ -92,17 +79,34 @@ export class PlayersComponent {
     this.fetchPlayers();
   }
 
-  prevPage() {
-    if (this.page > 1 && !this.loading) {
-      this.page--;
-      this.fetchPlayers();
+
+
+  toggleColumnToggle() {
+    this.showColumnToggle = !this.showColumnToggle;
+    if (this.showColumnToggle) {
+      setTimeout(() => this.positionColumnDropdown());
     }
   }
 
-  nextPage() {
-    if (!this.loading) {
-      this.page++;
-      this.fetchPlayers();
+  private positionColumnDropdown() {
+    const button = this.elRef.nativeElement.querySelector('.column-toggle-btn');
+    if (button) {
+      const rect = button.getBoundingClientRect();
+      this.columnDropdownStyle = {
+        top: `${rect.bottom + 4}px`,
+        right: `${window.innerWidth - rect.right}px`
+      };
     }
+  }
+
+  onPageChange(page: number) {
+    this.page = page;
+    this.fetchPlayers();
+  }
+
+  resetFilters(): void {
+    this.filterModel = {};
+    this.page = 1;
+    this.fetchPlayers();
   }
 }

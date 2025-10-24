@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
 })
 export class MultiSelectComponent<T extends { id: number; name: string }> {
   private clickListener?: (event: MouseEvent) => void;
+  @ViewChild('dropdownDiv', { read: ElementRef }) dropdownDiv?: ElementRef;
+  
   constructor(private elRef: ElementRef) {}
 
   @Input() items: T[] = [];
@@ -19,6 +21,7 @@ export class MultiSelectComponent<T extends { id: number; name: string }> {
   @Output() selectedIdsChange = new EventEmitter<number[]>();
 
   open = false;
+  dropdownStyle: any = {};
 
     getSelectedNames(): string {
       if (!this.selectedIds.length) return this.placeholder;
@@ -31,11 +34,23 @@ export class MultiSelectComponent<T extends { id: number; name: string }> {
       this.open = !this.open;
       if (this.open) {
         setTimeout(() => {
+          this.positionDropdown();
           this.clickListener = (event: MouseEvent) => this.handleClickOutside(event);
           document.addEventListener('mousedown', this.clickListener);
         });
       } else {
         this.removeClickListener();
+      }
+    }
+
+    private positionDropdown() {
+      const button = this.elRef.nativeElement.querySelector('button');
+      if (button) {
+        const rect = button.getBoundingClientRect();
+        this.dropdownStyle = {
+          top: `${rect.bottom + 4}px`,
+          left: `${rect.left}px`
+        };
       }
     }
 

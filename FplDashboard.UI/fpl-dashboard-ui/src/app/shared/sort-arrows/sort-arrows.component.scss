@@ -1,26 +1,41 @@
 .sort-arrows {
   display: inline-flex;
   flex-direction: column;
-  margin-left: 4px;
+  margin-left: 6px;
   vertical-align: middle;
+  gap: 2px;
 }
+
 .sort-arrows button {
   background: none;
   border: none;
   padding: 0;
-  font-size: 18px;
+  margin: 0;
   cursor: pointer;
   line-height: 1;
-  color: #1976d2;
-  transition: color 0.2s;
+  color: #9ca3af;
+  transition: color 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover:not(:disabled) {
+    color: #6b7280;
+  }
+
+  &.active {
+    color: #2563eb;
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    color: #e5e7eb;
+    cursor: default;
+  }
 }
-.sort-arrows button.active {
-  color: #512da8;
-}
-.sort-arrows button[disabled] {
-  color: #ccc;
-  cursor: default;
-}
+
 .sort-arrows svg {
   display: block;
+  width: 16px;
+  height: 16px;
 }

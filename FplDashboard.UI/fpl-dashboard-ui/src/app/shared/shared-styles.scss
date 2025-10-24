@@ -1,0 +1,218 @@
+// ========================================
+// 📐 SHARED LAYOUT STYLES
+// ========================================
+
+// Page container styles
+.page-container {
+  padding: 1.5rem 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+// ========================================
+// 🧱 HEADERS
+// ========================================
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+// ========================================
+// 🔠 TYPOGRAPHY
+// ========================================
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+.monospace {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+// Form indicators
+.form-high {
+  color: #059669;
+  font-weight: 600;
+}
+
+.form-mid {
+  color: #d97706;
+  font-weight: 500;
+}
+
+.form-low {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+// ========================================
+// 🎯 BUTTONS
+// ========================================
+
+.primary-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  font-size: 0.9rem;
+
+  &:hover:not(:disabled) {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.secondary-btn {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ========================================
+// 🧭 PAGINATION
+// ========================================
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #374151;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.active {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+    font-weight: 600;
+  }
+
+  svg {
+    color: currentColor;
+  }
+}
+
+.ellipsis {
+  color: #9ca3af;
+  padding: 0 0.25rem;
+  font-weight: 600;
+}
+
+// ========================================
+// 📦 CARDS
+// ========================================
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+// ========================================
+// ✅ ACCESSIBILITY
+// ========================================
+
+*:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+button:focus,
+input:focus,
+select:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

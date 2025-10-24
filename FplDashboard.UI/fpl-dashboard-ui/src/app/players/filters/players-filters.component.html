@@ -1,29 +1,54 @@
 <div class="filters-row">
-  <app-multi-select
-    [items]="teams"
-    [selectedIds]="selectedTeamIds"
-    [placeholder]="'All Teams'"
-    [maxLabelLength]="32"
-    (selectedIdsChange)="onTeamsSelected($event)">
-  </app-multi-select>
-  <app-multi-select
-    [items]="positionOptions"
-    [selectedIds]="selectedPositions"
-    placeholder="Positions"
-    (selectedIdsChange)="onPositionsSelected($event)">
-  </app-multi-select>
-  <input
-    type="text"
-    [value]="playerName"
-    (input)="onPlayerNameChange($event)"
-    placeholder="Search Player Name"
-    class="player-name-input" />
-  <input
-    type="number"
-    min="0"
-    [value]="minMinutes ?? ''"
-    (blur)="onMinMinutesBlur($event)"
-    placeholder="Min Minutes"
-    class="min-minutes-input" />
-  <button type="button" class="reset-btn" (click)="onResetFilters()">Reset</button>
+  <div class="filter-group-item">
+    <label class="filter-label">Team</label>
+    <app-multi-select
+      [items]="teams"
+      [selectedIds]="selectedTeamIds"
+      [placeholder]="'All Teams'"
+      [maxLabelLength]="32"
+      (selectedIdsChange)="onTeamsSelected($event)">
+    </app-multi-select>
+  </div>
+  
+  <div class="filter-group-item">
+    <label class="filter-label">Position</label>
+    <app-multi-select
+      [items]="positionOptions"
+      [selectedIds]="selectedPositions"
+      placeholder="All Positions"
+      (selectedIdsChange)="onPositionsSelected($event)">
+    </app-multi-select>
+  </div>
+  
+  <div class="filter-group-item">
+    <label class="filter-label">Player Name</label>
+    <input
+      type="text"
+      [value]="playerName"
+      (input)="onPlayerNameChange($event)"
+      placeholder="Search by name..."
+      class="player-name-input"
+      aria-label="Search player by name" />
+  </div>
+  
+  <div class="filter-group-item">
+    <label class="filter-label">Min Minutes</label>
+    <input
+      type="number"
+      min="0"
+      [value]="minMinutes ?? ''"
+      (blur)="onMinMinutesBlur($event)"
+      placeholder="e.g. 500"
+      class="min-minutes-input"
+      aria-label="Minimum minutes played" />
+  </div>
+  
+  <button type="button" class="reset-btn" (click)="onResetFilters()" aria-label="Reset all filters">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="1 4 1 10 7 10"></polyline>
+      <polyline points="23 20 23 14 17 14"></polyline>
+      <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+    </svg>
+    Reset Filters
+  </button>
 </div>

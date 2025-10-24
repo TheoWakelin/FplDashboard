@@ -1,200 +1,138 @@
-// Team multi-select styles
-.team-filter-wrapper {
-  margin-bottom: 1rem;
-  label {
-    font-weight: 500;
-    margin-right: 0.5rem;
-  }
-}
-.team-multiselect {
-  display: inline-block;
-  position: relative;
-  button {
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0.5rem 1.5rem 0.5rem 0.5rem;
-    cursor: pointer;
-    min-width: 180px;
-    text-align: left;
-    font-size: 1rem;
-    position: relative;
-  }
-  .arrow {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem;
-  }
-  .dropdown {
-    position: absolute;
-    left: 0;
-    top: 110%;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    z-index: 10;
-    min-width: 200px;
-    padding: 0.5rem;
-  }
-  .dropdown-list {
-    max-height: 220px;
-    overflow-y: auto;
-    margin-bottom: 0.5rem;
-    label {
-      display: block;
-      margin-bottom: 0.25rem;
-      font-weight: 400;
-      cursor: pointer;
-    }
-    input[type="checkbox"] {
-      margin-right: 0.5rem;
-    }
-  }
-  .close-btn {
-    display: block;
-    width: 100%;
-    background: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-}
+@use '../shared/shared-styles.scss';
 
 .players-page {
-  margin: 0 2rem;
+  @extend .page-container;
 }
 
-.page-header {
+.filters-toolbar {
+  @extend .card;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.page-title {
-  color: #1976d2;
-  font-weight: 700;
-  font-size: 2.8rem;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
-  padding-bottom: 8px;
-  border-bottom: 3px solid #1976d2;
-  width: fit-content;
-}
-
-.subheader {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #512da8;
-  background: linear-gradient(90deg, #ede7f6 0%, #e3f2fd 100%);
-  padding: 10px 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(81, 45, 168, 0.08);
-}
-
-.players-table-wrapper {
-  overflow-x: auto;
-  width: 100%;
-  margin-top: 2rem;
-  background: #f7f9fc;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(25, 118, 210, 0.07);
-}
-
-.players-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  min-width: 1200px;
-  width: max-content;
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.97rem;
-  background: #fff;
-  border-radius: 10px;
-}
-
-.players-table th,
-.players-table td {
-  padding: 0.7rem 1.1rem;
-  border-right: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
-  background: #fff;
-  white-space: nowrap;
-  transition: background 0.2s;
-  box-sizing: border-box;
-}
-.players-table th:last-child,
-.players-table td:last-child {
-  border-right: none;
-}
-
-.players-table th {
-  background: linear-gradient(90deg, #e3f2fd 0%, #ede7f6 100%);
-  font-weight: 700;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  border-bottom: 2px solid #1976d2;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
-}
-.players-table th.sticky-header,
-.players-table td.sticky-col {
-  position: sticky;
-  left: 0;
-  z-index: 4;
-  background: linear-gradient(90deg, #e3f2fd 0%, #ede7f6 100%);
-  border-right: 2px solid #1976d2;
-  min-width: 160px;
-  max-width: 160px;
-  width: 160px;
-  box-shadow: 2px 0 8px rgba(25, 118, 210, 0.07);
-  padding-left: 0.7rem;
-  padding-right: 0;
-}
-.players-table th.sticky-header.second,
-.players-table td.sticky-col.second {
-  left: 160px;
-}
-
-
-.players-table tr:hover td {
-  background: #e3f2fd;
-}
-.players-table tr:hover .sticky-col,
-.players-table tr:hover .sticky-header {
-  background: linear-gradient(90deg, #e3f2fd 0%, #ede7f6 100%) !important;
-}
-.players-table tr:hover .sticky-col,
-.players-table tr:hover .sticky-header {
-  z-index: 10;
-}
-
-.players-table thead tr {
-  height: 56px;
-}
-
-.players-table tbody tr {
-  transition: box-shadow 0.2s;
-}
-
-.players-table tbody tr:hover {
-  box-shadow: 0 2px 12px rgba(25, 118, 210, 0.09);
-}
-
-.pager {
-  position: sticky;
-  left: 0;
-  bottom: 0;
-  background: #f7f9fc;
-  margin: 1.5rem 0 0.5rem 0;
-  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
-  align-items: center;
-  z-index: 5;
-  padding: 1rem 0 1rem 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
 }
+
+.filters-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-icon {
+  color: #6b7280;
+}
+
+.controls-section {
+  position: relative;
+}
+
+.column-toggle-btn {
+  @extend .secondary-btn;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  svg {
+    color: #6b7280;
+  }
+}
+
+.column-toggle-dropdown {
+  position: fixed;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 280px;
+  max-width: 320px;
+  padding: 0.75rem;
+}
+
+.dropdown-header {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 0.5rem;
+}
+
+.column-list {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.column-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+  font-size: 0.9rem;
+
+  &:hover:not(.disabled) {
+    background: #f3f4f6;
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  input[type="checkbox"] {
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    flex: 1;
+  }
+}
+
+.required-badge {
+  font-size: 0.7rem;
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.close-dropdown-btn {
+  @extend .primary-btn;
+  width: 100%;
+  margin-top: 0.75rem;
+  border-radius: 8px;
+}
+
+.table-card {
+  @extend .card;
+  position: relative;
+  min-height: 400px;
+}
+

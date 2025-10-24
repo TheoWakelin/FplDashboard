@@ -40,7 +40,7 @@ describe('PlayersComponent', () => {
   it('should load players on fetch', () => {
     component.fetchPlayers();
     expect(mockApiService.getPagedPlayers).toHaveBeenCalledWith({
-      page: 1, pageSize: PAGINATION.DEFAULT_PAGE_SIZE, orderBy: '', orderDir: ''
+      page: 1, pageSize: PAGINATION.DEFAULT_PAGE_SIZE
     });
     expect(component.players).toEqual(mockPlayers);
     expect(component.loading).toBe(false);
@@ -64,28 +64,24 @@ describe('PlayersComponent', () => {
   it('should navigate to next page', () => {
     component.loading = false;
     component.page = 1;
-    component.nextPage();
+    component.totalPages = 5;
+    component.onPageChange(2);
     expect(component.page).toBe(2);
   });
 
   it('should navigate to previous page', () => {
     component.loading = false;
     component.page = 3;
-    component.prevPage();
+    component.totalPages = 5;
+    component.onPageChange(2);
     expect(component.page).toBe(2);
   });
 
-  it('should not go below page 1', () => {
-    component.loading = false;
-    component.page = 1;
-    component.prevPage();
-    expect(component.page).toBe(1);
-  });
-
-  it('should not paginate when loading', () => {
-    component.loading = true;
-    component.page = 1;
-    component.nextPage();
+  it('should reset filters', () => {
+    component.filterModel = { teamIds: [1], minMinutes: 500 };
+    component.page = 3;
+    component.resetFilters();
+    expect(component.filterModel).toEqual({});
     expect(component.page).toBe(1);
   });
 });
